@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{{essay.title}}</title>
+	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+        <div class="navbar-header" style="margin-top:10px">
+            <a class="navbar-brand" href="#">论坛</a>
+        </div>
+        <div style="height:30px;margin-top:10px">
+            <ul class="nav navbar-nav">
+                <li class="active" style="margin-left:50px"><a href="{{url_for('index')}}">首页</a></li>
+                <li><a href="#"></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li class="divider"></li>
+                        <li><a href="{{url_for('index',section='chat')}}">站内交流</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{url_for('index',section='phone')}}">手机品牌</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{url_for('index',section='source')}}">资源分享</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{url_for('index',section='water')}}">灌水区</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#"></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+
+            {% if user_name != '' %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-right:10px">
+                        <h4 style="float:left;margin-top:-3px">{{user_name}}</h4>&nbsp;&nbsp;
+                        <span class="caret" style="margin-top:-10px"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{person}}">个人空间</a></li>
+                        <li><a href="#">私信</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="logout">注销登录</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <div style="margin-top:10px">
+                    <div style="float:left;margin-left:-40px">
+                        <a href="{{url_for('login',eid=essay.eid)}}">登录</a>
+                    </div>|&nbsp;&nbsp;&nbsp;
+                    <div style="float:right;margin-right:30px;">
+                        <a href="{{url_rigister}}">注册</a>
+                    </div>
+                </div>
+            {% endif %}
+          </ul>
+
+        </div>
+        </div>
+    </nav>
+    <!-- flash -->
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            {{message}}
+        </div>
+    {% endfor %}
+    <!--  -->
+    <div>
+        <div class="modal show" style="margin-top:5.0%;z-index:0;overflow-y:scroll;margin-right:-15px;margin-bottom:-15px;">
+            <!-- 锚点 -->
+            <a id="top"></a>
+            <div class="modal-dialog" style="width:80%">
+                <div class="modal-content" style="margin-top:120px">
+                    <!-- 标题 -->
+                    <div class="modal-header">
+                        <h2 class="text-center text-primary" style="float:left;margin-left:30px">{{ essay.title }}</h2>
+                        <!-- 举报帖子 -->
+                        <a target="_blank" href="{{url_for('tip',essay=essay.eid)}}"><img src="{{url_for('static',filename='icons/jb.png')}}" style="float:right;margin-top:18px;margin-right:20px"></img></a>
+                    </div>
+                    <!-- 内容详述 -->
+                    <div class="modal-body">
+                        <div  class="modal-header">
+                            <div style="width:100px;height:150px;margin-top:30px;margin-left:60px">
+                                <img class="img-circle" src="{{ url_for('static',filename='photo/%s.png' % essay.author) }}" style="width:70px;height:70px">
+                                <p style="margin-left:20px;">{{ essay.author_name }}</p>
+                                <font size="2" color="red" style="margin-left:6px;">积分:{{essay.score}}</font>
+                            </div>
+                            <div style="margin-top:-120px;margin-left:230px">
+                                <p style="width:650px;"><font size="3">{{ essay.essay }}</font>
+                                </p>
+                                <p style="margin-top:50px;margin-left:500px"><font size="2" color="bebebe">1楼&nbsp;&nbsp;&nbsp;&nbsp;{{ essay.time }}&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{url_for('tip',essay=essay.eid)}}">举报</a></font></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 帖子 -->
+                    <div class="modal-body">
+                        <!-- 回复 -->
+                        {% for comment in comments %}
+                            <div  class="modal-header">
+                                <!-- 回复人信息 -->
+                                <div style="width:100px;height:150px;margin-top:30px;margin-left:60px">
+                                    <img class="img-circle" src="{{ url_for('static',filename='photo/%s.png' % comment.author) }}" style="width:70px;height:70px">
+                                    <p style="margin-left:20px;">{{comment.author_name}}</p>
+                                    <font size="2" color="red" style="margin-top:-125px;margin-left:6px;">积分:{{comment.score}}</font>
+                                </div>
+                                <!-- 回复内容 -->
+                                <div style="margin-top:-120px;margin-left:230px">
+                                    <p style="width:650px;"><font size="3">{{ comment.body }}</font>
+                                    </p>
+                                    <!-- 回复时间 -->
+                                    <p style="margin-top:50px;margin-left:500px"><font size="2" color="bebebe">{{comment.num}}楼&nbsp;&nbsp;&nbsp;&nbsp;{{ comment.time }}&nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="{{url_for('tip',comment=comment.cid)}}">举报</a></font></p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <!-- 分页 -->
+                    {% if page %}{% endif %}
+                    <div class="modal-footer">
+                        <ul class="pager">
+                            {% if page == 1 %}
+                            <li class="previous"><a href="{{url_for('essay',eid=essay.eid,page=page)}}" style="margin-left:300px">&larr; Older</a></li>
+                            {% else %}
+                            <li class="previous"><a href="{{url_for('essay',eid=essay.eid,page=page-1)}}" style="margin-left:300px">&larr; Older</a></li>
+                            {% endif %}
+                            <li class="next"><a href="{{url_for('essay',eid=essay.eid,page=page+1)}}" style="margin-right:300px">Newer &rarr;</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- top -->
+        <div style="position:absolute;margin-top:280px;margin-left:94%;">
+            <ul class="pager">
+
+                {% if user_name != None and user_name != '' %}
+                    <div><a href="#myModal" data-toggle="modal"><img src={{ url_for('static',filename='icons/write.png') }} style="width:40px;height:40px"></a></div>
+                {% else %}
+                    <div><a onclick="confirm('请登录后使用')"><img src={{ url_for('static',filename='icons/write.png') }} style="width:40px;height:40px"></a></div>
+                {% endif %}
+                <!-- top -->
+                <div><a href="#top" target="_self"><img src={{ url_for('static',filename='icons/top.png') }} style="margin-top:50px;width:40px;height:40px"></a></div>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 跟帖 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title" id="myModalLabel">跟帖</h3>
+                </div>
+                <!-- post提交跟帖 -->
+                <form method="post">
+                    {{form.hidden_tag()}}
+                    <div class="modal-body">
+                        {{form.text(class="form-control",placeholder="回复",style="height:150px")}}
+                    </div>
+                    <div class="modal-footer">
+                        {{ form.submit(class="btn btn-primary") }}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+                <!--
+                <form method="post">
+                    <div class="modal-body">
+                        <textarea class="form-control" id="name" placeholder="回复" style="height:150px"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">回复</button>
+                    </div>
+                </form>
+                -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</body>

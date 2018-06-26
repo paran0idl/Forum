@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Login</title>
+    <link href="{{url_for('static',filename='Wopop_files/style_log.css')}}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/userpanel.css')}}">
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/jquery.ui.all.css')}}">
+</head>
+
+<body class="login" mycollectionplug="bind">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+        <div class="navbar-header" style="margin-top:10px">
+            <a class="navbar-brand" href="#">论坛</a>
+        </div>
+        <div style="height:30px;margin-top:10px">
+            <ul class="nav navbar-nav">
+                <li class="active" style="margin-left:50px"><a href="#">首页</a></li>
+                <li><a href="#"></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        板块
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="divider"></li>
+                        <li><a href="#">站内交流</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">手机品牌</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">资源分享</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">灌水区</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#"></a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+            {% if user_name != '' %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-right:10px">
+                        <h4 style="float:left;margin-top:-3px">{{user_name}}</h4>&nbsp;&nbsp;
+                        <span class="caret" style="margin-top:-10px"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">个人空间</a></li>
+                        <li><a href="#">私信</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="logout">注销登录</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <div style="margin-top:10px">
+                    <div style="float:left;margin-left:-40px">
+                        <a href="login">登录</a>
+                    </div>|&nbsp;&nbsp;&nbsp;
+                    <div style="float:right;margin-right:30px;">
+                        <a href="regist">注册</a>
+                    </div>
+                </div>
+            {% endif %}
+          </ul>
+
+        </div>
+        </div>
+    </nav>
+    <!--  -->
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{message}}
+    </div>
+    {% endfor %}
+    <div class="login_m">
+        <form method="post">
+            {{form.hidden_tag()}}
+                <div class="login_boder">
+                    <div class="login_padding" id="login_model">
+                        <h2>Email</h2>
+                        <label>
+                            {{form.username(class="txt_input txt_input2" )}}
+                        </label>
+                        <h2>Password</h2>
+                        <label>
+                            {{form.password(class="txt_input")}}
+                        </label>
+
+                        <div class="rem_sub">
+                            <label>
+                                <br/>
+                                <div style="margin-right:100px">
+                                    {{form.submit(class="sub_button")}}
+                                </div>
+                            </label>
+                        </div>
+                </div>
+            </div><!--login_boder end-->
+            </form>
+    </div><!--login_m end-->
+        <br> <br>
+</body>
+</html>
