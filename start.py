@@ -13,7 +13,9 @@ from flask_login import login_user,logout_user,UserMixin,LoginManager
 from flask_sqlalchemy import SQLAlchemy
 import six  #get_id
 import requests
-
+'''
+test git
+'''
 #配置文件
 app = Flask(__name__)
 bootstrap = Bootstrap(app) #初始化Bootstrap
