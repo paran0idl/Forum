@@ -10,7 +10,7 @@ from flask_login import login_required
 from flask_wtf import Form
 from wtforms import StringField,SubmitField,TextAreaField,PasswordField,BooleanField
 from flask_login import login_user,logout_user,UserMixin,LoginManager
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy #dsjflksadjflksa
 import six  #get_id
 import requests
 
