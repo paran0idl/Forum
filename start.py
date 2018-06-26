@@ -19,7 +19,7 @@ app = Flask(__name__)
 bootstrap = Bootstrap(app) #初始化Bootstrap
 
 app.config['SECRET_KEY'] = 'hard to guess string' #WTF SRCF保护
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:12345678@localhost/new'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@localhost/new'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['PER_PAGE_NUM'] = 5
 URL_RIGTSTER = 'http://222.18.167.207:4000/auth/register'
@@ -36,7 +36,7 @@ def get_mysql_data(comm):
         host = 'localhost',
         port = 3306,
         user = 'root',
-        passwd = '12345678',
+        passwd = '123456',
         db = 'work',
         charset = 'utf8'
     )
@@ -177,7 +177,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    session['uid'] = None
+    session['uid'] = 0
     session['permission'] = 0
     return redirect(url_for('index'))
 
@@ -199,7 +199,7 @@ def index():
     type = request.args.get('section')
     uid = session.get('uid')
     person = 'http://222.18.167.207:4000'
-    print uid
+
     if uid is None:
         uname = ''
     else:
