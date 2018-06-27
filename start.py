@@ -14,7 +14,7 @@ from flask_sqlalchemy import SQLAlchemy #dsjflksadjflksa
 import six  #get_id
 import requests
 '''
-test git
+test git by zjt
 '''
 #配置文件
 app = Flask(__name__)
