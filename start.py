@@ -33,22 +33,6 @@ login_manager.login_view = 'login'
 db = SQLAlchemy(app)
 
 #Form文件
-def get_mysql_data(comm):
-    conn = MySQLdb.connect(
-        host = 'localhost',
-        port = 3306,
-        user = 'root',
-        passwd = '123456',
-        db = 'work',
-        charset = 'utf8'
-    )
-    cur = conn.cursor()
-    num = cur.execute(comm)
-    a = cur.fetchmany(num)
-    conn.commit()
-    cur.close()
-    conn.close()
-    return a
 
 class WriteForm(Form):
     name = StringField(validators=[Required()])
@@ -202,7 +186,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    session['uid'] = 0
+    session['uid'] = None
     session['permission'] = 0
     return redirect(url_for('index'))
 
