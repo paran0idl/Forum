@@ -15,6 +15,8 @@ import requests
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 '''
 test git by zjt
+ywwuyi died
+gou cai mo yu
 '''
 #配置文件
 app = Flask(__name__)
