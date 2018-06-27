@@ -5,7 +5,6 @@ from datetime import datetime
 from flask import Flask,redirect,session,url_for,flash,request
 from flask import render_template
 from flask_bootstrap import Bootstrap
-from wtforms.validators import Required
 from flask_login import login_required
 from flask_wtf import Form
 from wtforms import StringField,SubmitField,TextAreaField,PasswordField,BooleanField
@@ -13,6 +12,7 @@ from flask_login import login_user,logout_user,UserMixin,LoginManager
 from flask_sqlalchemy import SQLAlchemy
 import six  #get_id
 import requests
+from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 '''
 test git
 '''
@@ -24,7 +24,7 @@ app.config['SECRET_KEY'] = 'hard to guess string' #WTF SRCF保护
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@localhost/new'
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['PER_PAGE_NUM'] = 5
-URL_RIGTSTER = 'http://222.18.167.207:4000/auth/register'
+URL_REGISTER = 'http://222.18.167.207:4000/auth/register'
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -142,11 +142,34 @@ class Tip(db.Model):
     deal = db.Column(db.Boolean,default=False)
     deal_id = db.Column(db.Integer,default=0)
 
+#注册表单
+class RegisterForm(Form):
+    email = StringField('Email', validators=[Required(), Length(1, 64),
+                                             Email()])
+    username = StringField('Username', validators=[
+        Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+                                          'Usernames must have only letters, '
+                                          'numbers, dots or underscores')])
+    password = PasswordField('Password', validators=[
+        Required(), EqualTo('password2', message='Passwords must match.')])
+    password2 = PasswordField('Confirm password', validators=[Required()])
+    submit = SubmitField('Register')
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 #视图函数
+@app.route('/register',methods=['get','post'])
+def register():
+    form=RegisterForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data,
+                    username=form.username.data,
+                    password=form.password.data)
+        print user.email,user.username,user.password
+    return render_template('register.html', form=form)
+
+
 @app.route('/login',methods=['get','post'])
 def login():
     uid = session.get('uid') #防止直接切入login网址造成重复登录
@@ -251,7 +274,7 @@ def index():
             return redirect(url_for('index',section=type)) #post get重定向
 
         return render_template('base.html',
-                            url_rigister = URL_RIGTSTER,
+                            url_register = URL_REGISTER,
                             person=person,
                             sec=type,
                             page = page,
@@ -264,7 +287,7 @@ def index():
         num.append(Essay.query.filter_by(type=i).filter_by(visible=True).count())
     hot = Essay.query.filter_by(visible=True).order_by(Essay.visnum.desc()).limit(10)
     return render_template('index.html',
-                           url_rigister=URL_RIGTSTER,
+                           url_register=URL_REGISTER,
                            person = person,
                            num = num,
                            user_name = uname,
@@ -330,7 +353,7 @@ def essay():
         pass
     return render_template('essay.html',
                            user_name = user,
-                           url_rigister=URL_RIGTSTER,
+                           url_register=URL_REGISTER,
                            person=person,
                            essay = es,
                            page = page,
