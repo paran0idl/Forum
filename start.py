@@ -6,7 +6,7 @@ from flask import Flask,redirect,session,url_for,flash,request
 from flask import render_template
 from flask_bootstrap import Bootstrap
 from flask_login import login_required
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField,TextAreaField,PasswordField,BooleanField
 from flask_login import login_user,logout_user,UserMixin,LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -29,24 +29,25 @@ URL_REGISTER = 'http://222.18.167.207:4000/auth/register'
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'login'
+login_manager.init_app(app)
 
 db = SQLAlchemy(app)
 
 #Form文件
 
-class WriteForm(Form):
+class WriteForm(FlaskForm):
     name = StringField(validators=[Required()])
     text = TextAreaField(validators=[Required()])
     submit = SubmitField(u'发帖')
 
-class CommentForm(Form):
+class CommentForm(FlaskForm):
     text = TextAreaField()
     submit = SubmitField(u'回复')
 
-class DelForm(Form):
+class DelForm(FlaskForm):
     submit = SubmitField(u'删除')
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField('username')
     password = PasswordField('Password',validators=[Required()])
     submit = SubmitField('Log In')
@@ -127,17 +128,13 @@ class Tip(db.Model):
     deal_id = db.Column(db.Integer,default=0)
 
 #注册表单
-class RegisterForm(Form):
-    email = StringField('Email', validators=[Required(), Length(1, 64),
-                                             Email()])
-    username = StringField('Username', validators=[
-        Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-                                          'Usernames must have only letters, '
-                                          'numbers, dots or underscores')])
-    password = PasswordField('Password', validators=[
-        Required(), EqualTo('password2', message='Passwords must match.')])
-    password2 = PasswordField('Confirm password', validators=[Required()])
+class RegisterForm(FlaskForm):
+    email = StringField('Email')
+    username = StringField('Username')
+    password = PasswordField('Password')
+    password2 = PasswordField('Confirm password')
     submit = SubmitField('Register')
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -145,14 +142,29 @@ def load_user(user_id):
 #视图函数
 @app.route('/register',methods=['get','post'])
 def register():
-    form=RegisterForm()
+    form = RegisterForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data,
-                    username=form.username.data,
-                    password=form.password.data)
-        print user.email,user.username,user.password
+        new_user_name=User.query.filter_by(username=form.username.data)
+        print form.password.data,form.password2.data
+        if new_user_name==None:
+            flash("User Exist")
+        elif form.password.data!=form.password2.data:
+            flash("Password not confirmed")
+        else:
+            new_user=User(username=form.username.data,email=form.email.data,pwd=form.password.data,score=0)
+            db.session.add(new_user)
+            db.session.commit()
+            print ("add user success")
+            user= User.query.filter_by(username=form.username.data).first()
+            login_user(user)
+            session['uid']=user.uid
+            session['permission']=user.permission
+            return redirect(url_for('index'))
+    form.username.data = ''
+    form.email.data = ''
+    form.password.data = ''
+    form.password2.data = ''
     return render_template('register.html', form=form)
-
 
 @app.route('/login',methods=['get','post'])
 def login():
@@ -164,6 +176,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         if uid is None:
+            print form.username.data
             user = User.query.filter_by(email=form.username.data).first()
             if user is not None and user.pwd == form.password.data:
                 login_user(user)

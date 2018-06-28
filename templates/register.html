@@ -23,23 +23,20 @@
                 <li class="active" style="margin-left:50px"><a href="#">首页</a></li>
                 <li><a href="#"></a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        板块
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="divider"></li>
-                        <li><a href="#">站内交流</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">手机品牌</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">资源分享</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">灌水区</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#"></a></li>
-                    </ul>
-                </li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('index',section='chat')}}">站内交流</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('index',section='phone')}}">手机品牌</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('index',section='source')}}">资源分享</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('index',section='water')}}">灌水区</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"></a></li>
+                        </ul>
+                    </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -82,14 +79,14 @@
         <form method="post">
             {{form.hidden_tag()}}
                 <div class="login_boder">
-                    <div class="login_padding" id="login_model">
+                    <div class="login_padding"  id="login_model">
                         <h2>Email</h2>
                         <label>
-                            {{form.username(class="txt_input txt_input2" )}}
+                            {{form.email(class="txt_input")}}
                         </label>
                         <h2>Username</h2>
                         <label>
-                            {{form.username(class="txt_input txt_input2")}}
+                            {{form.username(class="txt_input")}}
                         </label>
                         <h2>Password</h2>
                         <label>
