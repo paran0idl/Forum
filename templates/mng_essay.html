@@ -25,6 +25,11 @@
 </head>
 
 <body>
+{% extends "navbar.html"%}
+{% block top_navbar %}
+{{super()}}
+{% endblock%}
+<!--
 	<nav class="navbar navbar-default" role="navigation" style="top:0px;width:100%;position:fixed;z-index:999;margin-top:-10px;">
             <div class="container-fluid">
             <div class="navbar-header" style="margin-top:20px;margin-left:20px">
@@ -70,6 +75,8 @@
             </div>
             </div>
         </nav>
+        -->
+	{% block page_content%}
     <div id="wrapper" style="margin-top:70px;">
 		<div id="sidebar-nav" class="sidebar">
 			<div class="sidebar-scroll" style="height:100%">
@@ -160,7 +167,10 @@
 			</div>
 		</div>
 	</div>
-
+	{% endblock %}
+{% block buttom_navbar %}
+{{super()}}
+{% endblock %}
 	<script src="assets/vendor/jquery/jquery.min.js"></script>
 	<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>

@@ -147,11 +147,13 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         new_user_name=User.query.filter_by(username=form.username.data)
-        print form.password.data,form.password2.data
-        if new_user_name==None:
+        new_user_email=User.query.filter_by(email=form.email.data)
+        if new_user_name!=None and new_user_email!=None:
             flash("User Exist")
         elif form.password.data!=form.password2.data:
             flash("Password not confirmed")
+        elif form.username.data=='' or form.email.data=='' or form.password.data=='' or form.password2.data=='':
+            flash("Info not complete")
         else:
             new_user=User(username=form.username.data,email=form.email.data,pwd=form.password.data,score=0)
             db.session.add(new_user)
@@ -166,7 +168,7 @@ def register():
     form.email.data = ''
     form.password.data = ''
     form.password2.data = ''
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form,user_name='')
 
 @app.route('/login',methods=['get','post'])
 def login():

@@ -9,7 +9,13 @@
 </head>
 
 <body>
+{% extends 'navbar.html'%}
+{% block top_navbar%}
+{{super()}}
+{% endblock %}
+
     <!-- 头部 -->
+<!--
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
         <div class="navbar-header" style="margin-top:10px">
@@ -66,7 +72,9 @@
         </div>
         </div>
     </nav>
+    -->
     <!-- flash -->
+{% block page_content %}
     {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
             <button type="button" class="close" data-dismiss="alert">x</button>
@@ -171,7 +179,24 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     </div>
                 </form>
+<<<<<<< HEAD
             </div>
         </div>
+=======
+                <!--
+                <form method="post">
+                    <div class="modal-body">
+                        <textarea class="form-control" id="name" placeholder="回复" style="height:150px"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">回复</button>
+                    </div>
+                </form>
+                -->
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+        {% endblock %}
+>>>>>>> fcb61d53348b9562b26679f9e8fe4551d67d4450
     </div>
 </body>

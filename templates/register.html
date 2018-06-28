@@ -13,6 +13,11 @@
 </head>
 
 <body class="login" mycollectionplug="bind">
+{% extends 'navbar.html'%}
+{% block top_navbar %}
+{{ super() }}
+{% endblock %}
+<!--
     <nav class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
         <div class="navbar-header" style="margin-top:10px">
@@ -68,7 +73,9 @@
         </div>
         </div>
     </nav>
+    -->
     <!--  -->
+{% block page_content %}
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -108,7 +115,11 @@
                 </div>
             </div><!--login_boder end-->
             </form>
-    </div><!--login_m end-->
-        <br> <br>
+    </div>
+{% endblock %}
+<!--login_m end-->
+{% block buttom_navbar%}
+{{super()}}
+{% endblock %}
 </body>
 </html>
