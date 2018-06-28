@@ -1,3 +1,4 @@
+
 #coding:utf-8
 import json
 import time
@@ -9,7 +10,7 @@ from flask_login import login_required
 from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField,TextAreaField,PasswordField,BooleanField
 from flask_login import login_user,logout_user,UserMixin,LoginManager
-from flask_sqlalchemy import SQLAlchemy #dsjflksadjflksa
+from flask_sqlalchemy import SQLAlchemy
 import six  #get_id
 import requests
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
