@@ -8,8 +8,14 @@
 	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+{% extends 'navbar.html'%}
+{% block top_navbar %}
+{{super()}}
+{% endblock %}
+{% block page_content %}
     <div style="margin-right:0px;overflow-y:auto;overflow-x:hidden">
         <a id="top"></a>
+        <!---
         <nav class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
             <div class="navbar-header" style="margin-top:10px">
@@ -65,6 +71,7 @@
             </div>
             </div>
         </nav>
+        -->
         <!-- flash -->
         {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
@@ -201,6 +208,7 @@
                     </div>
                 </div>
                 <!-- 底部 -->
+                <!--
                 <nav class="navbar navbar-default" role="navigation" style="margin-top:90px;width:125%">
                     <div class="container-fluid" style="margin-left:17%">
                         <div style="height:120px;margin-down:10px;">
@@ -229,10 +237,13 @@
                         </div>
                     </div>
                 </nav>
+                -->
             </div>
         </div>
     </div>
-
-
+{% endblock %}
+{% block buttom_navbar%}
+                {{super()}}
+                {% endblock %}
 </body>
 </html>
