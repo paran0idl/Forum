@@ -9,12 +9,14 @@ from flask_login import login_required
 from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField,TextAreaField,PasswordField,BooleanField
 from flask_login import login_user,logout_user,UserMixin,LoginManager
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy #dsjflksadjflksa
 import six  #get_id
 import requests
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 '''
-test git
+test git by zjt
+ywwuyi died
+gou cai mo yu
 '''
 #配置文件
 app = Flask(__name__)
