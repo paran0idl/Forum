@@ -16,7 +16,7 @@ class DelForm(FlaskForm):
     submit = SubmitField(u'删除')
 
 class LoginForm(FlaskForm):
-    username = StringField('username')
+    email = StringField('Email')
     password = PasswordField('Password',validators=[Required()])
     submit = SubmitField('Log In')
 
