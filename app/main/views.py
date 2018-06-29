@@ -231,7 +231,11 @@ def essay():
                            user_name = user,
                            url_register=URL_REGISTER,
                            person=person,
+<<<<<<< HEAD
+                           essay=es,
+=======
                            essay = es,
+>>>>>>> d2296b0322a25209c65dcda5d9f47e10d3dcd939
                            page = page,
                            comments = comments,
                            form = form
@@ -458,6 +462,11 @@ def get_my_code():
 @main.route('/get_apk')
 def get_apk():
     return redirect(url_for('static',filename='a.apk'))
+
+@main.route('/user_center')
+def user_center():
+    name=request.args.get('section')
+    return render_template('user_center.html',name=name)
 
 #将数据转换为字典，举报视图函数使用
 def data_to_dict(data):

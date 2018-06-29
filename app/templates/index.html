@@ -177,6 +177,8 @@
                                         {% endfor %}
                                         <br><br><br><br>
                                     </div>
+<<<<<<< HEAD:templates/index.html
+=======
                                     <!--
                                     <div style="float:right;margin-right:20%;">
                                         {% for i in range(5,10) %}
@@ -184,6 +186,7 @@
                                         {% endfor %}
                                     </div>
                                     -->
+>>>>>>> d2296b0322a25209c65dcda5d9f47e10d3dcd939:app/templates/index.html
                                 </div>
                             </div>
                         </div>
@@ -195,55 +198,12 @@
                         <div><a href="#top" target="_self"><img src={{ url_for('static',filename='icons/top.png') }} style="margin-top:50px;width:40px;height:40px"></a></div>
                     </ul>
                 </div>
-                <!-- APP下载 -->
-                <div style="width:13%;position:fixed;left:82%;top:168px;text-align:center">
-                    <div class="navbar navbar-default" role="navigation" height="200px">
-                        <p></p>
-                        <label width="50px"><font size="3">扫描二维码或点击</font></label>
-                        <label width="50px"><font size="3">下载APP</font></label>
-                        <label width="50px"><font size="3">获取更多信息!</font></label>
-                        <p></p>
-                        <img src="{{url_for('static',filename='icons/test.png')}}" width="110px"><p></p>
-                        <p></p>
-                    </div>
-                </div>
-                <!-- 底部 -->
-                <!--
-                <nav class="navbar navbar-default" role="navigation" style="margin-top:90px;width:125%">
-                    <div class="container-fluid" style="margin-left:17%">
-                        <div style="height:120px;margin-down:10px;">
-                            <div><ul class="nav navbar-nav" style="margin-top:5px">
-                                <li><a href="#">公司简介</a></li>
-                                <li><a href="#">招贤纳士</a></li>
-                                <li><a href="#">广告服务</a></li>
-                                <li><a href="#">联系方式</a></li>
-                                <li><a href="#">版权声明</a></li>
-                                <li><a href="#">法律顾问</a></li>
-                                <li><a href="#">问题报告</a></li>
-                                <li><a href="#">合作伙伴</a></li>
-                                <li><a href="#">论坛反馈</a></li>
-                            </ul></div>
-                            <div><ul class="nav navbar-nav" style="margin-top:15px">
-                                <li><a href="#"></a></li>
-                                <li><a href="#"></a></li>
-                                <li><a href="#"></a></li>
-                                <li><a href="#"></a></li>
-                                <li><a href="#"></a></li>
-                                <li><a href="#"></a></li>
-                                <li><a href="#"></a></li>
-                                <li><a href="#"></a></li>
-                                <li><a href="#">copyright © 2009-2014</a></li>
-                            </ul></div>
-                        </div>
-                    </div>
-                </nav>
-                -->
             </div>
         </div>
     </div>
 {% endblock %}
 {% block buttom_navbar%}
-                {{super()}}
-                {% endblock %}
+{{super()}}
+{% endblock %}
 </body>
 </html>
