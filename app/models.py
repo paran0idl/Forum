@@ -74,7 +74,7 @@ class UpLoad:
     UPLOAD_FOLDER = 'upload'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     def allowed_file(self,filename):
-        ALLOWED_EXTENSIONS = set(['txt', 'png', 'jpg', 'xls', 'JPG', 'PNG', 'xlsx', 'gif', 'GIF'])
+        ALLOWED_EXTENSIONS = set(['png', 'jpg', 'JPG', 'PNG'])
         return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
     def upload(self):
