@@ -71,15 +71,13 @@ class Follow(db.Model):
     follower_id=db.Column(db.Integer)
 
 class UpLoad:
-    UPLOAD_FOLDER = 'upload'
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     def allowed_file(self,filename):
         ALLOWED_EXTENSIONS = set(['png', 'jpg', 'JPG', 'PNG'])
         return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
     def upload(self):
         basedir = os.path.abspath(os.path.dirname(__file__))
-        file_dir = os.path.join(basedir,app.config['UPLOAD_FOLDER'])
+        file_dir = os.path.join(basedir,'upload')
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
         f = request.files['file']
