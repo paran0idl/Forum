@@ -18,12 +18,11 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'login'
 
 db = SQLAlchemy()
-
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     app.config['PER_PAGE_NUM'] = 5
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@localhost/new'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@localhost/forum'
     config[config_name].init_app(app)
     bootstrap.init_app(app)
     db.init_app(app)
