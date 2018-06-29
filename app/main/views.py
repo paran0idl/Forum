@@ -10,7 +10,7 @@ from . import main
 from .. import db
 from app.models import Permission,User,Essay,Comment,Image,Tip
 from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm
-import requests
+#import requests
 from manage import app
 @login_manager.user_loader
 def load_user(user_id):
@@ -231,11 +231,7 @@ def essay():
                            user_name = user,
                            url_register=URL_REGISTER,
                            person=person,
-<<<<<<< HEAD
-                           essay=es,
-=======
                            essay = es,
->>>>>>> d2296b0322a25209c65dcda5d9f47e10d3dcd939
                            page = page,
                            comments = comments,
                            form = form
@@ -464,9 +460,27 @@ def get_apk():
     return redirect(url_for('static',filename='a.apk'))
 
 @main.route('/user_center')
+@login_required
 def user_center():
     name=request.args.get('section')
     return render_template('user_center.html',name=name)
+
+@main.route('/user_info')
+@login_required
+def user_info():
+    name=request.args.get('section')
+    return render_template('user_center.html',name=name)
+
+@main.route('/focus')
+@login_required
+def focus():
+    name=request.args.get('section')
+    return render_template('user_center.html',name=name)
+
+
+
+
+
 
 #将数据转换为字典，举报视图函数使用
 def data_to_dict(data):
