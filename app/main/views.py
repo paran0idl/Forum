@@ -9,9 +9,8 @@ from flask_login import login_user,logout_user
 from . import main
 from .. import db
 from app.models import Permission,User,Post,Category,Follow
-from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm
+from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm,UserInfo
 #import requests
-from manage import app
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -469,6 +468,8 @@ def get_my_code():
 def get_apk():
     return redirect(url_for('static',filename='a.apk'))
 
+'''
+
 @main.route('/user_center')
 @login_required
 def user_center():
@@ -478,8 +479,15 @@ def user_center():
 @main.route('/user_info')
 @login_required
 def user_info():
-    #name=request.args.get('section')
-    return render_template('user_info.html')
+    form = UserInfo()
+    if form.validate_on_submit():
+        result = User.query.filter_by(User.user_name == 'za').first()
+        result.user_name=form.username.data
+        result.user_pwd=form.newpasswd.data
+        result.user_email=form.email.data
+        db.session.commit()
+        return render_template('index.html')
+    return render_template('user_info.html',form=form)
 
 @main.route('/focus')
 @login_required
@@ -489,9 +497,7 @@ def focus():
 
 
 
-
-
-
+'''
 #将数据转换为字典，举报视图函数使用
 def data_to_dict(data):
     ins = data.split('&')
