@@ -48,5 +48,5 @@ class Category(db.Model):
 class Follow(db.Model):
     __tablename__='follow'
     follow_info=db.Column(db.Integer,primary_key=True,index=True,autoincrement=True,unique=True)
+    user_id=db.Column(db.Integer)
     following_id=db.Column(db.Integer)
-    follower_id=db.Column(db.Integer)

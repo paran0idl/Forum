@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TimeLine</title>
+</head>
+<body>
+<div class="modal show" style="margin-top:5.0%;z-index:0;overflow-y:auto;overflow-x:hidden;margin-right:-15px;margin-bottom:-15px;">
+        <a id="top"></a> <!--锚点-->
+        <div class="modal-dialog" style="width:80%">
+            <div class="modal-content" style="margin-top:120px">
+                <!-- 标题 -->
+                <div class="modal-header">
+                    <h1 class="text-center text-primary" style="float:left;margin-left:30px">{{modal_name}}</h1>
+                </div>
+                <!-- 帖子 -->
+                <div class="modal-body">
+                    <!-- 热帖 -->
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active"> <!-- 标题 -->
+                            <h3 class="list-group-item-heading">热帖排行</h3>
+                        </a>
+                        {% for i in hot_post %}
+                            <a href="{{ url_for('main.essay',eid=i['eid']) }}" target="_blank" class="list-group-item">
+                                <div style="margin-left:30px">
+                                        <h5 class="list-group-item-heading">{{ i['title'] }}</h5>
+                                        <p class="list-group-item-text" style="margin-left:80%">{{ i['author_name'] }}</p> <!-- 作者，时间 -->
+                                        <p class="list-group-item-text" style="margin-left:80%">{{ i['time'] }}</p> <!-- 作者，时间 -->
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+
+                    <!-- 按照发帖时间排序 -->
+                    <div class="list-group"> <!-- 正文 -->
+                        <!-- 开始 -->
+                        <a href="#" class="list-group-item active">
+                            <h3 class="list-group-item-heading">全部内容</h3>
+                        </a>
+                        <!-- 正文 -->
+                        {% for i in eassy %}
+                            <a href="{{ url_for('main.essay',eid=i['eid']) }}" target="_blank" class="list-group-item">
+                                <div style="margin-left:30px">
+                                        <h5 class="list-group-item-heading">{{ i['title'] }}</h5>
+                                        <p class="list-group-item-text" style="margin-left:80%">{{ i['author_name'] }}</p> <!-- 作者，时间 -->
+                                        <p class="list-group-item-text" style="margin-left:80%">{{ i['time'] }}</p> <!-- 作者，时间 -->
+                                </div>
+                                {% if delete %}
+                                    <a href={{ url_for('moderate',mtype=1,mid=1) }}><font style="color:red;">删除</font></a>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if page%}{% endif %}
+                <!-- 分页 -->
+</body>
+</html>
