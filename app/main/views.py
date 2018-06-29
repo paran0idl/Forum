@@ -10,7 +10,8 @@ from . import main
 from .. import db
 from app.models import Permission,User,Post,Category,Follow
 from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm,UserInfo
-#import requests
+from ..token import generate_confirmation_token,confirm_token
+from ..email import send_email
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -18,10 +19,6 @@ URL_REGISTER = 'http://222.18.167.207:4000/auth/register'
 #视图函数
 @main.route('/register',methods=['get','post'])
 def register():
-    db.create_all()
-    user=User(user_name='za',user_email='za@qq.com',user_pwd='123',user_permission=4,avatar=None,email_confirm=True,user_score=0)
-    db.session.add(user)
-    db.session.commit()
     form = RegisterForm()
     if form.validate_on_submit():
         new_user_name=User.query.filter_by(user_name=form.username.data).first()
@@ -37,6 +34,10 @@ def register():
             db.session.add(new_user)
             db.session.commit()
             print ("add user success")
+            token = generate_confirmation_token(new_user.user_email)
+            send_email(new_user.user_email, 'Confirm Your Account',
+                   'email/confirm', user=new_user, token=token)
+            flash('A confirmation email has been sent to you by email.')
             user= User.query.filter_by(user_name=form.username.data).first()
             login_user(user)
             session['uid']=user.u_id

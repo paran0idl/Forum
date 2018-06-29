@@ -3,8 +3,10 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import config
+from flask_mail import Mail
 
 bootstrap = Bootstrap()
+mail = Mail()
 
 '''
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -25,6 +27,7 @@ def create_app(config_name):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@localhost/forum'
     config[config_name].init_app(app)
     bootstrap.init_app(app)
+    mail.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
 
