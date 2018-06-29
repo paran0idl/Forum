@@ -6,6 +6,8 @@ from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
 import time
+from flask_sqlalchemy import SQLAlchemy
+from app import create_app
 
 class Permission:
     FOLLOW = 0X01
@@ -59,16 +61,34 @@ class Post(db.Model):
     category_id=db.Column(db.Integer)
     post_score=db.Column(db.Integer,default=0)
 
+    def __init__(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id):
+        self.post_id = post_id
+        self.title = title
+        self.content = content
+        self.publisher_id = publisher_id
+        self.post_time = post_time,
+        self.toppost = toppost_id,
+        self.category = category_id
+
 class Category(db.Model):
     __tablename__='category'
     category_id=db.Column(db.Integer,primary_key=True,index=True,autoincrement=True,unique=True)
     topic_id=db.Column(db.Integer)
+
+    def __init__(self,category_id,topic_id):
+        self.category_id = category_id
+        self.topic_id = topic_id
 
 class Follow(db.Model):
     __tablename__='follow'
     follow_info=db.Column(db.Integer,primary_key=True,index=True,autoincrement=True,unique=True)
     following_id=db.Column(db.Integer)
     follower_id=db.Column(db.Integer)
+
+    def __init__(self,follower_id,following_id,follow_info):
+        self.following_id = follower_id
+        self.follower_id = following_id
+        self.follow_info = follow_info
 
 class UpLoad:
     UPLOAD_FOLDER = 'upload'
@@ -91,3 +111,29 @@ class UpLoad:
             f.save(os.path.join(file_dir, new_filename))
             return True
         return False
+class Commnd_Permission():
+    db = SQLAlchemy(app)
+    def display_post(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id):
+        '''
+        发布帖子
+        :param post_id:
+        :param title:
+        :param content:
+        :param publisher_id:
+        :param post_time:
+        :param toppost_id:
+        :param category_id:
+        :return:
+        '''
+        self.db.session.add(User(post_id,title,content,publisher_id,post_time,toppost_id,category_id))
+        self.db.session.commit()
+    def attention(self,follower_id,following_id,follow_info):
+        '''
+        关注
+        :return:
+        '''
+        self.db.session.add(Follow(follower_id,following_id,follow_info))
+        self.db.session.commit()
+    def display_Category(self,topic_id,category_id):
+        self.db.session.add(Follow(category_id,topic_id))
+        self.db.session.commit()
