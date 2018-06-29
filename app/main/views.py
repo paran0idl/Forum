@@ -468,14 +468,14 @@ def user_center():
 @main.route('/user_info')
 @login_required
 def user_info():
-    name=request.args.get('section')
-    return render_template('user_center.html',name=name)
+    #name=request.args.get('section')
+    return render_template('user_info.html')
 
 @main.route('/focus')
 @login_required
 def focus():
-    name=request.args.get('section')
-    return render_template('user_center.html',name=name)
+    #name=request.args.get('section')
+    return render_template('focus.html')
 
 
 
