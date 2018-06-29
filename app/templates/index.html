@@ -15,6 +15,63 @@
 {% block page_content %}
     <div style="margin-right:0px;overflow-y:auto;overflow-x:hidden">
         <a id="top"></a>
+        <!---
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+            <div class="navbar-header" style="margin-top:10px">
+                <a class="navbar-brand" href="#">论坛</a>
+            </div>
+            <div style="height:30px;margin-top:10px">
+                <ul class="nav navbar-nav">
+                    <li class="active" style="margin-left:50px"><a href="{{url_for('main.index')}}">首页</a></li>
+                    <li><a href="#"></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('main.index',section='chat')}}">站内交流</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('main.index',section='phone')}}">手机品牌</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('main.index',section='source')}}">资源分享</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('main.index',section='water')}}">灌水区</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"></a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                {% if user_name != '' %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-right:10px">
+                            <h4 style="float:left;margin-top:-3px">{{user_name}}</h4>&nbsp;&nbsp;
+                            <span class="caret" style="margin-top:-10px"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{person}}">个人空间</a></li>
+                            <li><a href="#">私信</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="logout">注销登录</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <div style="margin-top:10px">
+                        <div style="float:left;margin-left:-40px">
+                            <a href="{{url_for('main.login')}}">登录</a>
+                        </div>|&nbsp;&nbsp;&nbsp;
+                        <div style="float:right;margin-right:30px;">
+                            <a href="{{url_for('main.register')}}">注册</a>
+                        </div>
+                    </div>
+                {% endif %}
+              </ul>
+
+            </div>
+            </div>
+        </nav>
+        -->
         <!-- flash -->
         {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
@@ -30,13 +87,13 @@
                        <td class="fl_g" width="30%">
                             <div class="fl_icn_g" style="width: 70px;margin-left:40px">
                                 <span class="phoneListImg">
-                                <a href="{{url_for('index',section='chat')}}">
+                                <a href="{{url_for('main.index',section='chat')}}">
                                     <img src="{{url_for('static',filename='icons/交流.png')}}" align="left" alt="站内交流" width="50px"/>
                                 </a>
                                 </span>
                             </div>
                             <dl style="margin-left: 100px;margin-top:5px">
-                            <dt><a href="{{url_for('index',section='chat')}}"  target="_blank" style='color:'>站内交流</a></dt>
+                            <dt><a href="{{url_for('main.index',section='chat')}}"  target="_blank" style='color:'>站内交流</a></dt>
                             <dd><em>帖数: {{num[0]}}</em></dd><dd>
                             </dd>
                             </dl>
@@ -45,13 +102,13 @@
                        <td class="fl_g" width="30%">
                             <div class="fl_icn_g" style="width: 70px;">
                                 <span class="phoneListImg">
-                                <a href="{{url_for('index',section='phone')}}"  target="_blank">
+                                <a href="{{url_for('main.index',section='phone')}}"  target="_blank">
                                     <img src={{url_for('static',filename='icons/手机.png')}} align="left" alt="手机品牌" width="50px"/>
                                 </a>
                                 </span>
                             </div>
                             <dl style="margin-left: 60px;margin-top:5px">
-                            <dt><a href="{{url_for('index',section='phone')}}"  target="_blank">手机品牌</a>
+                            <dt><a href="{{url_for('main.index',section='phone')}}"  target="_blank">手机品牌</a>
 
                             </dt>
                             <dd><em>帖数: {{num[1]}}</em></dd><dd>
@@ -62,13 +119,13 @@
                        <td class="fl_g" width="30%">
                             <div class="fl_icn_g" style="width: 70px;">
                                 <span class="phoneListImg">
-                                <a href="{{url_for('index',section='source')}}"  target="_blank">
+                                <a href="{{url_for('main.index',section='source')}}"  target="_blank">
                                     <img src={{url_for('static',filename='icons/资源.png')}} align="left" alt="资源分享" width="50px"/>
                                 </a>
                                 </span>
                             </div>
                             <dl style="margin-left: 60px;margin-top:5px">
-                            <dt><a href="{{url_for('index',section='source')}}"  target="_blank" style='color:'>资源分享</a>
+                            <dt><a href="{{url_for('main.index',section='source')}}"  target="_blank" style='color:'>资源分享</a>
 
                             </dt>
                             <dd><em>帖数: {{num[2]}}</em></dd><dd>
@@ -79,13 +136,13 @@
                        <td class="fl_g" width="33%">
                             <div class="fl_icn_g" style="width: 70px;">
                                 <span class="phoneListImg">
-                                <a href="{{url_for('index',section='water')}}" target="_blank">
+                                <a href="{{url_for('main.index',section='water')}}" target="_blank">
                                     <img src={{url_for('static',filename='icons/灌水.png')}} align="left" alt="灌水区" width="50px"/>
                                 </a>
                                 </span>
                             </div>
                             <dl style="margin-left:60px;margin-top:5px">
-                            <dt><a href="{{url_for('index',section='water')}}"  target="_blank" style='color:'>灌水区</a>
+                            <dt><a href="{{url_for('main.index',section='water')}}"  target="_blank" style='color:'>灌水区</a>
 
                             </dt>
                             <dd><em>帖数: {{num[3]}}</em></dd><dd>
@@ -109,7 +166,7 @@
                                                 <div class="panel-heading">
                                                     <div class="panel-title">
                                                         <div>
-                                                            <a style="" href = "{{url_for('essay',eid=hot[i]['eid'])}}">{{hot[i]['title']}}</a>
+                                                            <a style="" href = "{{url_for('main.essay',eid=hot[i]['eid'])}}">{{hot[i]['title']}}</a>
                                                             <p style="float:right">{{hot[i]['author_name']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{hot[i]['time']}}</p>
                                                         </div>
                                                     </div>
@@ -120,6 +177,16 @@
                                         {% endfor %}
                                         <br><br><br><br>
                                     </div>
+<<<<<<< HEAD:templates/index.html
+=======
+                                    <!--
+                                    <div style="float:right;margin-right:20%;">
+                                        {% for i in range(5,10) %}
+                                            <li><a href="{{url_for('main.essay',eid=hot[i]['eid'])}}" target="_blank"><font size="4">{{hot[i]['title']}}</font></a></li>
+                                        {% endfor %}
+                                    </div>
+                                    -->
+>>>>>>> d2296b0322a25209c65dcda5d9f47e10d3dcd939:app/templates/index.html
                                 </div>
                             </div>
                         </div>

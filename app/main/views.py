@@ -231,7 +231,11 @@ def essay():
                            user_name = user,
                            url_register=URL_REGISTER,
                            person=person,
+<<<<<<< HEAD
                            essay=es,
+=======
+                           essay = es,
+>>>>>>> d2296b0322a25209c65dcda5d9f47e10d3dcd939
                            page = page,
                            comments = comments,
                            form = form

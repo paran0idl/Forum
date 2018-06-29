@@ -17,19 +17,19 @@
             </div>
             <div style="height:30px;margin-top:10px">
                 <ul class="nav navbar-nav">
-                    <li class="active" style="margin-left:50px"><a href="{{url_for('index')}}">首页</a></li>
+                    <li class="active" style="margin-left:50px"><a href="{{url_for('main.index')}}">首页</a></li>
                     <li><a href="#"></a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='chat')}}">站内交流</a></li>
+                            <li><a href="{{url_for('main.index',section='chat')}}">站内交流</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='phone')}}">手机品牌</a></li>
+                            <li><a href="{{url_for('main.index',section='phone')}}">手机品牌</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='source')}}">资源分享</a></li>
+                            <li><a href="{{url_for('main.index',section='source')}}">资源分享</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='water')}}">灌水区</a></li>
+                            <li><a href="{{url_for('main.index',section='water')}}">灌水区</a></li>
                             <li class="divider"></li>
                             <li><a href="#"></a></li>
                         </ul>
@@ -53,10 +53,10 @@
                 {% else %}
                     <div style="margin-top:10px">
                         <div style="float:left;margin-left:-40px">
-                            <a href="{{url_for('login')}}">登录</a>
+                            <a href="{{url_for('main.login')}}">登录</a>
                         </div>|&nbsp;&nbsp;&nbsp;
                         <div style="float:right;margin-right:30px;">
-                            <a href="{{url_for('register')}}">注册</a>
+                            <a href="{{url_for('main.register')}}">注册</a>
                         </div>
                     </div>
                 {% endif %}
@@ -73,19 +73,19 @@
         </div>
         <div style="height:30px;margin-top:10px">
             <ul class="nav navbar-nav">
-                <li class="active" style="margin-left:50px"><a href="{{url_for('index')}}">首页</a></li>
+                <li class="active" style="margin-left:50px"><a href="{{url_for('main.index')}}">首页</a></li>
                 <li><a href="#"></a></li>
                 <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='chat')}}">站内交流</a></li>
+                            <li><a href="{{url_for('main.index',section='chat')}}">站内交流</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='phone')}}">手机品牌</a></li>
+                            <li><a href="{{url_for('main.index',section='phone')}}">手机品牌</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='source')}}">资源分享</a></li>
+                            <li><a href="{{url_for('main.index',section='source')}}">资源分享</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='water')}}">灌水区</a></li>
+                            <li><a href="{{url_for('main.index',section='water')}}">灌水区</a></li>
                             <li class="divider"></li>
                             <li><a href="#"></a></li>
                         </ul>
@@ -110,11 +110,11 @@
                 <div style="margin-top:10px">
                     <div style="float:left;margin-left:-40px">
                         {% if sec %}
-                            <a href="{{url_for('login',section=sec)}}">登录</a>
+                            <a href="{{url_for('main.login',section=sec)}}">登录</a>
                         {% endif %}
                     </div>|&nbsp;&nbsp;&nbsp;
                     <div style="float:right;margin-right:30px;">
-                        <a href="{{url_for('register')}}">注册</a>
+                        <a href="{{url_for('main.register')}}">注册</a>
                     </div>
                 </div>
             {% endif %}
@@ -147,7 +147,7 @@
                             <h3 class="list-group-item-heading">热帖排行</h3>
                         </a>
                         {% for i in hot_post %}
-                            <a href="{{ url_for('essay',eid=i['eid']) }}" target="_blank" class="list-group-item">
+                            <a href="{{ url_for('main.essay',eid=i['eid']) }}" target="_blank" class="list-group-item">
                                 <div style="margin-left:30px">
                                         <h5 class="list-group-item-heading">{{ i['title'] }}</h5>
                                         <p class="list-group-item-text" style="margin-left:80%">{{ i['author_name'] }}</p> <!-- 作者，时间 -->
@@ -165,7 +165,7 @@
                         </a>
                         <!-- 正文 -->
                         {% for i in eassy %}
-                            <a href="{{ url_for('essay',eid=i['eid']) }}" target="_blank" class="list-group-item">
+                            <a href="{{ url_for('main.essay',eid=i['eid']) }}" target="_blank" class="list-group-item">
                                 <div style="margin-left:30px">
                                         <h5 class="list-group-item-heading">{{ i['title'] }}</h5>
                                         <p class="list-group-item-text" style="margin-left:80%">{{ i['author_name'] }}</p> <!-- 作者，时间 -->
@@ -183,11 +183,11 @@
                 <div class="modal-footer">
                     <ul class="pager">
                         {% if page == 1 %}
-                        <li class="previous"><a href="{{url_for('index',section=sec,page=1)}}" style="margin-left:300px">&larr; Older</a></li>
+                        <li class="previous"><a href="{{url_for('main.index',section=sec,page=1)}}" style="margin-left:300px">&larr; Older</a></li>
                         {%else%}
-                        <li class="previous"><a href="{{url_for('index',section=sec,page=page-1)}}" style="margin-left:300px">&larr; Older</a></li>
+                        <li class="previous"><a href="{{url_for('main.index',section=sec,page=page-1)}}" style="margin-left:300px">&larr; Older</a></li>
                         {% endif %}
-                        <li class="next"><a href="{{url_for('index',section=sec,page=page+1)}}" style="margin-right:300px">Newer &rarr;</a></li>
+                        <li class="next"><a href="{{url_for('main.index',section=sec,page=page+1)}}" style="margin-right:300px">Newer &rarr;</a></li>
                     </ul>
                 </div>
             </div>

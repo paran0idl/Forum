@@ -25,12 +25,16 @@
 </head>
 
 <body>
-{% extends 'navbar.html' %}
-{% block top_navbar%}
-{{super()}}
-{% endblock %}
-<!--
-	<nav class="navbar navbar-default" role="navigation" style="position:fixed;top:0px;width:100%;z-index:999;margin-top:-10px;">
+    <!-- flash
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{message}}
+    </div>
+    {% endfor %}
+    -->
+    <div id="wrapper" style="margin-top:-20px;">
+        <nav class="navbar navbar-default" role="navigation" style="z-index:999;margin-top:-10px;">
             <div class="container-fluid">
             <div class="navbar-header" style="margin-top:20px;margin-left:20px">
                 <a class="navbar-brand" href="#">论坛</a>
@@ -43,13 +47,13 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='chat')}}">站内交流</a></li>
+                            <li><a href="{{url_for('main.index',section='chat')}}">站内交流</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='phone')}}">手机品牌</a></li>
+                            <li><a href="{{url_for('main.index',section='phone')}}">手机品牌</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='source')}}">资源分享</a></li>
+                            <li><a href="{{url_for('main.index',section='source')}}">资源分享</a></li>
                             <li class="divider"></li>
-                            <li><a href="{{url_for('index',section='water')}}">灌水区</a></li>
+                            <li><a href="{{url_for('main.index',section='water')}}">灌水区</a></li>
                             <li class="divider"></li>
                             <li><a href="#"></a></li>
                         </ul>
@@ -57,38 +61,31 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-right:10px">
-						<h4 style="float:left;margin-top:-3px">{{user_name}}</h4>&nbsp;&nbsp;
-						<span class="caret" style="margin-top:-10px"></span>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="#">个人空间</a></li>
-						<li><a href="#">私信</a></li>
-						<li role="separator" class="divider"></li>
-						<li><a href="logout">注销登录</a></li>
-					</ul>
-				</li>
-
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-right:10px">
+                            <h4 style="float:left;margin-top:-3px">{{user_name}}</h4>&nbsp;&nbsp;
+                            <span class="caret" style="margin-top:-10px"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">个人空间</a></li>
+                            <li><a href="#">私信</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="logout">注销登录</a></li>
+                        </ul>
+                    </li>
               </ul>
             </div>
             </div>
         </nav>
-       -->
-{% block page_content%}
-    <div id="wrapper" style="margin-top:70px;">
 		<div id="sidebar-nav" class="sidebar">
 			<div class="sidebar-scroll">
 				<nav style="margin-top:-20px;margin-left:20px">
 					<ul class="nav">
-						<li><a href="{{url_for('manage',type='essay')}}" class=""><i class="lnr lnr-code"></i> <span>Essay</span></a></li>
+						<li><a href="{{url_for('main.manage',type='essay')}}" class=""><i class="lnr lnr-code"></i> <span>Essay</span></a></li>
                         <li><a class="">  <span></span></a></li>
-                        <li><a href="{{url_for('manage',type='comment')}}" class=""><i class="lnr lnr-chart-bars"></i> <span>Comment</span></a></li>
+                        <li><a href="{{url_for('main.manage',type='comment')}}" class=""><i class="lnr lnr-chart-bars"></i> <span>Comment</span></a></li>
                         <li><a class=""> <span></span></a></li>
-						{% if can %}
-						<li><a href="{{url_for('manage',type='user')}}" class=""><i class="lnr lnr-cog"></i> <span>User</span></a></li>
-						{% endif %}
+                        <li><a href="{{url_for('main.manage',type='user')}}" class=""><i class="lnr lnr-cog"></i> <span>User</span></a></li>
 					</ul>
 				</nav>
 			</div>
@@ -100,26 +97,29 @@
 					<h3 class="page-title">Management</h3>
 					<div class="panel">
 						<div class="panel-heading">
-							<h3 class="panel-title">Comment</h3>
+							<h3 class="panel-title">User</h3>
 						</div>
 						<div class="panel-body">
 							<table class="table">
 								<thead>
 									<tr>
 										<th>#</th>
-                                        <th>Title</th>
-                                        <th>Visible</th>
+                                        <th>Email</th>
+                                        <th>Nick</th>
+										<th>Score</th>
+                                        <th>Permission</th>
                                         <th></th>
 									</tr>
 								</thead>
 								<tbody>
-                                {% for essay in comment_t %}
+                                {% for user in users %}
 									<tr>
-										<td>{{essay['cid']}}</td>
-										<td>{{essay['body']}}</td>
-                                        <td id="visible{{essay['cid']}}" ondblclick="ShowElement(this)">{{essay['visible']}}</td>
-                                        <td></td>
-										<td><button onclick="showCustomer({{essay['cid']}})" class="btn btn-mini btn-primary" type="button">Save</button></td>
+										<td>{{user['uid']}}</td>
+                                        <td>{{user['email']}}</td>
+										<td id="username{{user['uid']}}" ondblclick="ShowElement(this)">{{user['username']}}</td>
+										<td id="score{{user['uid']}}" ondblclick="ShowElement(this)">{{user['score']}}</td>
+                                        <td id="permission{{user['uid']}}" ondblclick="ShowElement(this)">{{user['permission']}}</td>
+                                        <td><button onclick="showCustomer({{user['uid']}})" class="btn btn-mini btn-primary" type="button">Save</button></td>
 									</tr>
                                 {% endfor %}
 								</tbody>
@@ -130,10 +130,7 @@
 			</div>
 		</div>
 	</div>
-{% endblock%}
-{% block buttom_navbar %}
-{{super()}}
-{% endblock %}
+
 	<script src="assets/vendor/jquery/jquery.min.js"></script>
 	<script src="assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="assets/vendor/jquery-slimscroll/jquery.slimscroll.min.js"></script>
@@ -145,14 +142,18 @@
 	function showCustomer(i)
     {
         var data = {};
-        var visible = 'visible' + i;
+        var username = 'username' + i;
+        var score = 'score' + i;
+        var permission = 'permission' + i;
 
-        data['cid'] = i;
-        data['visible'] = document.getElementById(visible).innerHTML; //$(permission).innerHTML;
+        data['uid'] = i;
+        data['username'] = document.getElementById(username).innerHTML; //$(username).innerHTML;
+        data['score'] = document.getElementById(score).innerHTML;  //$(score).innerHTML;
+        data['permission'] = document.getElementById(permission).innerHTML; //$(permission).innerHTML;
 
 		$.ajax({
             type: 'POST',
-            url: '{{url_for('mng_comment')}}',
+            url: '{{url_for('mng_user')}}',
             data: data,
             contentType: 'application/json; charset=UTF-8',
             dataType: 'null', // 注意：这里是指希望服务端返回json格式的数据
