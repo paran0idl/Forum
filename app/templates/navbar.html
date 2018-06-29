@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+{% block top_navbar %}
+<nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+            <div class="navbar-header" style="margin-top:10px">
+                <a class="navbar-brand" href={{url_for('main.index')}}>论坛</a>
+            </div>
+            <div style="height:30px;margin-top:10px">
+                <ul class="nav navbar-nav">
+                    <li class="active" style="margin-left:50px"><a href="{{url_for('main.index')}}">首页</a></li>
+                    <li><a href="#"></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('main.index',section='chat')}}">站内交流</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('main.index',section='phone')}}">手机品牌</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('main.index',section='source')}}">资源分享</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{{url_for('main.index',section='water')}}">灌水区</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#"></a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                {% if user_name != '' %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-right:10px">
+                            <h4 style="float:left;margin-top:-3px">{{user_name}}</h4>&nbsp;&nbsp;
+                            <span class="caret" style="margin-top:-10px"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{url_for('main.user_center')}}">个人空间</a></li>
+                            <li><a href="{{person}}">个人空间</a></li>
+                            <li><a href="#">私信</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="logout">注销登录</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <div style="margin-top:10px">
+                        <div style="float:left;margin-left:-40px">
+                            <a href="{{url_for('main.login')}}">登录</a>
+                        </div>|&nbsp;&nbsp;&nbsp;
+                        <div style="float:right;margin-right:30px;">
+                            <a href="{{url_for('main.register')}}">注册</a>
+                        </div>
+                    </div>
+                {% endif %}
+              </ul>
+
+            </div>
+            </div>
+        </nav>
+{% endblock %}
+
+{% block page_content%}
+{% endblock %}
+
+{% block buttom_navbar%}
+<nav class="navbar navbar-default" role="navigation" style="margin-top:90px;width:125%">
+                    <div class="container-fluid" style="margin-left:17%">
+                        <div style="height:120px;margin-down:10px;">
+                            <div><ul class="nav navbar-nav" style="margin-top:5px">
+                                <li><a href="#">公司简介</a></li>
+                                <li><a href="#">招贤纳士</a></li>
+                                <li><a href="#">广告服务</a></li>
+                                <li><a href="#">联系方式</a></li>
+                                <li><a href="#">版权声明</a></li>
+                                <li><a href="#">法律顾问</a></li>
+                                <li><a href="#">问题报告</a></li>
+                                <li><a href="#">合作伙伴</a></li>
+                                <li><a href="#">论坛反馈</a></li>
+                            </ul></div>
+                            <div><ul class="nav navbar-nav" style="margin-top:15px">
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#"></a></li>
+                                <li><a href="#">copyright © 2009-2014</a></li>
+                            </ul></div>
+
+                        </div>
+                    </div>
+                </nav>
+{% endblock %}
+</body>
+</html>
