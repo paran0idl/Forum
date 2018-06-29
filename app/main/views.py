@@ -5,13 +5,14 @@ from flask import render_template
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from app import login_manager
-from flask_login import login_user,logout_user
+from flask_login import login_user,logout_user,current_user
 from . import main
 from .. import db
 from app.models import Permission,User,Post,Category,Follow
 from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm,UserInfo
 from ..token import generate_confirmation_token,confirm_token
 from ..email import send_email
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -71,6 +72,8 @@ def login():
                     return redirect(url_for('main.essay',eid=eid))
                 if section is not None:
                     return redirect(url_for('main.index',section=section))
+                print '6324'
+                print user.u_id
                 return redirect(url_for('main.user_view',u_id=user.u_id))
             else:
                 flash('Username or Password error!')
@@ -117,14 +120,20 @@ def index():
 
 @main.route('/<u_id>',methods=['get','post'])
 def user_view(u_id):
+    print '6655'
+    print u_id
+    print '233333'
     user=User.query.filter_by(u_id=u_id).first()
-    following=Follow.query.filter_by(user_id=u_id).all()
+    following=Follow.query.filter_by(following_id=u_id).all()
     posts=[]
+    print user.user_name, u_id, posts
     for f in following:
         for post in Post.query.filter_by(publisher_id=f.following_id).all():
             posts.append(post)
     for post in posts:
         print post.title
+
+    print user.user_name, u_id, posts
     return render_template('index.html',u_id=u_id,user_name=user.user_name,posts=posts)
     '''
     #帖子
@@ -495,13 +504,18 @@ def user_center():
 @login_required
 def user_info():
     form = UserInfo()
+    print 'ywwuyi died'
     if form.validate_on_submit():
-        result = User.query.filter_by(User.user_name == 'za').first()
+        print current_user.user_name
+        result = User.query.filter_by(User.user_name == current_user.user_name).first()
         result.user_name=form.username.data
         result.user_pwd=form.newpasswd.data
         result.user_email=form.email.data
         db.session.commit()
-        return render_template('index.html')
+        flash('nmsl')
+        #return redirect('index.html',form=form)
+
+    print 'nmsl'
     return render_template('user_info.html',form=form)
 
 @main.route('/focus')
