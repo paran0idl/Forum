@@ -38,6 +38,7 @@ class Post(db.Model):
     post_time=db.Column(db.DateTime, index=True, default=datetime.utcnow)
     toppost_id=db.Column(db.Integer)
     category_id=db.Column(db.Integer)
+    post_score=db.Column(db.Integer,default=0)
 
 class Category(db.Model):
     __tablename__='category'
