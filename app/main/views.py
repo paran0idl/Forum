@@ -8,7 +8,7 @@ from app import login_manager
 from flask_login import login_user,logout_user
 from . import main
 from .. import db
-from app.models import Permission,User,Essay,Comment,Image,Tip
+from app.models import Permission,User,Post,Category,Follow
 from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm
 import requests
 from manage import app
@@ -19,10 +19,14 @@ URL_REGISTER = 'http://222.18.167.207:4000/auth/register'
 #视图函数
 @main.route('/register',methods=['get','post'])
 def register():
+    db.create_all()
+    user=User(user_name='za',user_email='za@qq.com',user_pwd='123',user_permission=4,avatar=None,email_confirm=True,user_score=0)
+    db.session.add(user)
+    db.session.commit()
     form = RegisterForm()
     if form.validate_on_submit():
-        new_user_name=User.query.filter_by(username=form.username.data).first()
-        new_user_email=User.query.filter_by(email=form.email.data).first()
+        new_user_name=User.query.filter_by(user_name=form.username.data).first()
+        new_user_email=User.query.filter_by(user_email=form.email.data).first()
         if new_user_name!=None and new_user_email!=None:
             flash("User Exist")
         elif form.password.data!=form.password2.data:
@@ -30,14 +34,14 @@ def register():
         elif form.username.data=='' or form.email.data=='' or form.password.data=='' or form.password2.data=='':
             flash("Info not complete")
         else:
-            new_user=User(username=form.username.data,email=form.email.data,pwd=form.password.data,score=0)
+            new_user=User(user_name=form.username.data,user_email=form.email.data,user_pwd=form.password.data)
             db.session.add(new_user)
             db.session.commit()
             print ("add user success")
-            user= User.query.filter_by(username=form.username.data).first()
+            user= User.query.filter_by(user_name=form.username.data).first()
             login_user(user)
-            session['uid']=user.uid
-            session['permission']=user.permission
+            session['uid']=user.u_id
+            session['permission']=user.user_permission
             return redirect(url_for('main.index'))
     form.username.data = ''
     form.email.data = ''
@@ -49,18 +53,18 @@ def register():
 def login():
     uid = session.get('uid') #防止直接切入login网址造成重复登录
     if uid is not None:
-        name = User.query.filter_by(uid=uid).first().username
+        name = User.query.filter_by(u_id=uid).first().user_name
     else:
         name=''
     form = LoginForm()
     if form.validate_on_submit():
         if uid is None:
-            print form.username.data
-            user = User.query.filter_by(email=form.username.data).first()
-            if user is not None and user.pwd == form.password.data:
+            print form.email.data
+            user = User.query.filter_by(user_email=form.email.data).first()
+            if user is not None and user.user_pwd == form.password.data:
                 login_user(user)
-                session['uid'] = user.uid
-                session['permission'] = user.permission
+                session['uid'] = user.u_id
+                session['permission'] = user.user_permission
                 eid = request.args.get('eid')
                 section = request.args.get('section')
                 if eid is not None:
@@ -82,6 +86,7 @@ def logout():
     session['permission'] = 0
     return redirect(url_for('main.index'))
 
+
 @main.route('/',methods = ['get','post'])
 def index():
     email = request.args.get('email')
@@ -92,7 +97,7 @@ def index():
         js = json.loads(html)
         for i in js['result']:
             if i['email'] == email:
-                um = User(username=i['username'], pwd=i['passwordd'], email=i['email'])
+                um = User(user_name=i['username'], user_pwd=i['passwordd'], user_email=i['email'])
                 db.session.add(um)
                 db.session.commit()
                 break
@@ -104,9 +109,10 @@ def index():
     if uid is None:
         uname = ''
     else:
-        p = User.query.filter_by(uid=uid).first()
-        uname = p.username
-        person = person + '?email=' + p.email
+        p = User.query.filter_by(u_id=uid).first()
+        uname = p.user_name
+        person = person + '?email=' + p.user_email
+    '''
     #帖子
     if type is not None:
         if type == 'water':
@@ -168,7 +174,11 @@ def index():
                            num = num,
                            user_name = uname,
                            hot = hot)
+                           '''
+    return render_template('index.html',user_name=uname)
 
+
+'''
 @main.route('/essay',methods = ['get','post'])
 def essay():
     person = 'http://222.18.167.207:4000'
@@ -231,11 +241,7 @@ def essay():
                            user_name = user,
                            url_register=URL_REGISTER,
                            person=person,
-<<<<<<< HEAD
-                           essay=es,
-=======
                            essay = es,
->>>>>>> d2296b0322a25209c65dcda5d9f47e10d3dcd939
                            page = page,
                            comments = comments,
                            form = form
@@ -476,3 +482,4 @@ def data_to_dict(data):
         i = i.split('=')
         data[i[0]] = i[1]
     return data
+'''''
