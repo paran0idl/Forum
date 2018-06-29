@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-from flask_login import UserMixin, AnonymousUserMixin
-from . import db, login_manager
-import six  #get_id
+from flask_login import UserMixin
+from . import db
+import six
 from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
 import time
-from flask_sqlalchemy import SQLAlchemy
-from app import create_app
 
 class Permission:
     FOLLOW = 0X01
@@ -24,7 +22,7 @@ class User(UserMixin,db.Model):
     email_confirm=db.Column(db.Boolean,default=0)
     user_score=db.Column(db.Integer,default=0)
 
-    post=db.relationship('Post',backref='post_author', lazy='dynamic')
+    post= db.relationship('Post',backref='post_author', lazy='dynamic')
     def __repr__(self):
         return '<User: %s>' % (self.username)
 
@@ -34,21 +32,11 @@ class User(UserMixin,db.Model):
         except AttributeError:
             raise NotImplementedError('No `id` attribute - override `get_id`')
 
-class Admin(User):
-    def add_score(self,u_id,num):
-        result = User.query.filter_by(User.u_id==u_id).first()
-        result.user_score+=num
+    def publish_post(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id):
+        tmp = Post(post_id,title,content,publisher_id,post_time,toppost_id,category_id)
+        db.session.add(tmp)
         db.session.commit()
 
-    def del_user(self,u_id):
-        result = User.qury.filter_by(User.u_id==u_id).first()
-        db.session.delete(result)
-        db.session.commit()
-
-    def del_post(self,p_id):
-        result = Post.query.filter_by(Post.post_id==p_id).first()
-        db.session.delete(result)
-        db.session.commit()
 
 class Post(db.Model):
     __tablename__='post'
@@ -109,28 +97,4 @@ class UpLoad:
             f.save(os.path.join(file_dir, new_filename))
             return True
         return False
-class Commnd_Permission():
-    def display_post(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id):
-        '''
-        发布帖子
-        :param post_id:
-        :param title:
-        :param content:
-        :param publisher_id:
-        :param post_time:
-        :param toppost_id:
-        :param category_id:
-        :return:
-        '''
-        self.db.session.add(User(post_id,title,content,publisher_id,post_time,toppost_id,category_id))
-        self.db.session.commit()
-    def attention(self,follower_id,following_id,follow_info):
-        '''
-        关注
-        :return:
-        '''
-        self.db.session.add(Follow(follower_id,following_id,follow_info))
-        self.db.session.commit()
-    def display_Category(self,topic_id,category_id):
-        self.db.session.add(Follow(category_id,topic_id))
-        self.db.session.commit()
+
