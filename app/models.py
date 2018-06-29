@@ -97,4 +97,3 @@ class UpLoad:
             f.save(os.path.join(file_dir, new_filename))
             return True
         return False
-

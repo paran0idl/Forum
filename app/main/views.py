@@ -71,7 +71,7 @@ def login():
                     return redirect(url_for('main.essay',eid=eid))
                 if section is not None:
                     return redirect(url_for('main.index',section=section))
-                return redirect(url_for('main.index'))
+                return redirect(url_for('main.user_view',u_id=user.u_id))
             else:
                 flash('Username or Password error!')
         else:
@@ -105,13 +105,27 @@ def index():
     type = request.args.get('section')
     uid = session.get('uid')
     person = 'http://222.18.167.207:4000'
-
+    print uid
     if uid is None:
         uname = ''
     else:
         p = User.query.filter_by(u_id=uid).first()
         uname = p.user_name
         person = person + '?email=' + p.user_email
+
+    return render_template('index.html',u_id=uid,user_name=uname,person=person)
+
+@main.route('/<u_id>',methods=['get','post'])
+def user_view(u_id):
+    user=User.query.filter_by(u_id=u_id).first()
+    following=Follow.query.filter_by(user_id=u_id).all()
+    posts=[]
+    for f in following:
+        for post in Post.query.filter_by(publisher_id=f.following_id).all():
+            posts.append(post)
+    for post in posts:
+        print post.title
+    return render_template('index.html',u_id=u_id,user_name=user.user_name,posts=posts)
     '''
     #帖子
     if type is not None:
@@ -175,7 +189,7 @@ def index():
                            user_name = uname,
                            hot = hot)
                            '''
-    return render_template('index.html',user_name=uname)
+    #return render_template('index.html',user_name=uname)
 
 
 '''
