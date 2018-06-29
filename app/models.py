@@ -46,7 +46,7 @@ class Admin(User):
         db.session.commit()
 
     def del_post(self,p_id):
-        result = post.query.filter_by(post.post_id==p_id).first()
+        result = Post.query.filter_by(Post.post_id==p_id).first()
         db.session.delete(result)
         db.session.commit()
 
@@ -110,7 +110,6 @@ class UpLoad:
             return True
         return False
 class Commnd_Permission():
-    db = SQLAlchemy(app)
     def display_post(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id):
         '''
         发布帖子
