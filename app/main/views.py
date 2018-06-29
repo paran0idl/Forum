@@ -13,6 +13,8 @@ from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm
 import requests
 import time
 #from manage import app
+from ..token import generate_confirmation_token,confirm_token
+from ..email import send_email
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -35,6 +37,10 @@ def register():
             db.session.add(new_user)
             db.session.commit()
             print ("add user success")
+            token = generate_confirmation_token(new_user.user_email)
+            send_email(new_user.user_email, 'Confirm Your Account',
+                   'email/confirm', user=new_user, token=token)
+            flash('A confirmation email has been sent to you by email.')
             user= User.query.filter_by(user_name=form.username.data).first()
             login_user(user)
             session['uid']=user.u_id
