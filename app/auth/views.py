@@ -2,7 +2,10 @@ from flask import render_template, redirect, request, url_for, flash,current_app
 from flask_login import login_user, logout_user, login_required
 from . import auth
 from ..models import User
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
+from .. import db
+from ..token import generate_confirmation_token
+from ..email import send_email
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -20,3 +23,19 @@ def login():
     return render_template('auth/login.html', form=form)
 
 
+
+@auth.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(user_email=form.email.data,
+                    user_name=form.username.data,
+                    user_pwd=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        token = generate_confirmation_token(user.user_email)
+        send_email(user.user_email, 'Confirm Your Account',
+                   'email/confirm', user=user, token=token)
+        flash('A confirmation email has been sent to you by email.')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/register.html', form=form)

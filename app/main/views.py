@@ -51,6 +51,7 @@ def user_view(u_id):
     for post in posts:
         print post.title
     return render_template('index.html',u_id=u_id,user_name=user.user_name,posts=posts)
+
     '''
         page = request.args.get('page',1)
         page = int(page)
