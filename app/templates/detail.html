@@ -1,12 +1,13 @@
-<ul class="detail">
-    {% for post in posts %}
-    <li class="post">
-        <div class="post-content">
-            <div class="post-date">{{ post.post_time }}</div>
-            <div class="post-author">{{ post.publisher_name }}</div>
-            <div class="post-title">{{post.title}}</div>
-            <div class="post-body">{{post.content}}</div>
-        </div>
-    </li>
+
+<form method="post">
+    主帖<br>
+    {{toppost.title}}<br>
+    {{toppost.content}}<br>
+    评论<br>
+    {% for comment in comments %}
+    时间：{{ comment.post_time }}<br>
+    发布者：{{ comment.publisher_name }}<br>
+    标题：{{comment.title}}<br>
+    正文：{{comment.content}}<br>
     {% endfor %}
-</ul>
+</form>

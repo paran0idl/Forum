@@ -1,9 +1,7 @@
-名字：{{name}}
-关注人数：<a href="{{url_for('focus')}}">{{followed_cnt}}</a>
-粉丝人数：{{fan}}
-发布过的内容:
+名字：{{ name }}<br>
+关注人数：<a href={{url_for('main.focus')}}>{{ followed_cnt }}</a><br>
+粉丝人数：{{ fan }}<br>
+发布过的内容（标题）:<br>
 {% for i in posts %}
-<li>
-    <p><a href="{{url_for('detail'),post_id=i.post_id}}">{{i.title}}</a></p>
-</li>
-{% end for %}
+<a href={{url_for('main.detail',_external=True,post_id=i.post_id)}}>{{i.title}}</a><br>
+{%endfor%}
