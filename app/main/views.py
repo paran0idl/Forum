@@ -35,18 +35,6 @@ def index():
         uid = current_user.u_id
         uname = current_user.user_name
     return render_template('index.html',u_id=uid,user_name=uname)
-
-@main.route('/<u_id>',methods=['get','post'])
-def user_view(u_id):
-    user=User.query.filter_by(u_id=u_id).first()
-    following=Follow.query.filter_by(following_id=u_id).all()
-    posts=[]
-    for f in following:
-        for post in Post.query.filter_by(publisher_id=f.following_id).all():
-            posts.append(post)
-    for post in posts:
-        print post.title
-    return render_template('index.html',u_id=u_id,user_name=user.user_name,posts=posts)
     '''
         page = request.args.get('page',1)
         page = int(page)
