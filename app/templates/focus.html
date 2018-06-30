@@ -1,15 +1,7 @@
-<ul class="focus">
+<form method="post">
     {% for post in posts %}
-    <li class="post">
-        <div class="post-content">
-            <div class="post-date">{{ post.post_time }}</div>
-            <div class="post-author">{{ post.publisher_name }}</div>
-            <div class="post-title">
-                <a herf="{{url_for('detail'),post=post}}">
-                    {{ post.title }}
-                </a>
-            </div>
-        </div>
-    </li>
+    发布时间：{{ post.post_time }}<br>
+    发布人：{{ post.publisher_name }}<br>
+    标题：<a herf="{{url_for('main.detail',post_id=post.post_id)}}">{{ post.title }}</a><br>
     {% endfor %}
-</ul>
+</form>

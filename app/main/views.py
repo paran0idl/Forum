@@ -63,20 +63,20 @@ def user_center():
 
 @main.route('/focus',methods=['get','post'])
 @login_required
-def focus(followed):
+def focus():
+    followed = Follow.query.filter(Follow.follower_id==current_user.u_id).all()
     posts = []
     for i in followed:
-        post = Post.query.filter(Post.publisher_id==i).first()
-        posts.append(post)
+        post = Post.query.filter(Post.publisher_id==i.followed_id).all()
+        for j in post:
+            posts.append(j)
     return render_template('focus.html',posts=posts)
 
 @main.route('/detail',methods=['get','post'])
 def detail():
     post_id=request.args.get('post_id')
-    print post_id
     toppost=Post.query.filter(Post.post_id==post_id).first()
     comments=Post.query.filter(Post.toppost_id==post_id).all()
-    print toppost.title
     return render_template('detail.html',toppost=toppost,comments=comments)
 
 @main.route('/writepost',methods=['get','post'])
