@@ -68,6 +68,16 @@ class User(UserMixin,db.Model):
         db.session.add(tmp)
         db.session.commit()
 
+    def gravatar_hash(self):
+        return hashlib.md5(self.user_email.lower().encode('utf-8')).hexdigest()
+
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        url = 'https://secure.gravatar.com/avatar'
+        hash = self.gravatar_hash()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=hash, size=size, default=default, rating=rating)
+
+
 class Post(db.Model):
     __tablename__='post'
     post_id=db.Column(db.Integer,primary_key=True,index=True,autoincrement=True)
@@ -79,19 +89,6 @@ class Post(db.Model):
     toppost_id=db.Column(db.Integer)
     category_id=db.Column(db.Integer)
     post_score=db.Column(db.Integer,default=0)
-
-
-    def __init__(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
-        self.post_id = post_id
-
-    def __init__(self,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
-        self.title = title
-        self.content = content
-        self.publisher_id = publisher_id
-        self.post_time = post_time,
-        self.toppost_id = toppost_id,
-        self.category = category_id,
-        self.publisher_name=publisher_name
 
 class Category(db.Model):
     __tablename__='category'
