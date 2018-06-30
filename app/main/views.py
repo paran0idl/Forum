@@ -330,6 +330,7 @@ def user_center():
     name=request.args.get('section')
     return render_template('user_center.html',name=name)
 
+'''
 @main.route('/user_info')
 @login_required
 def user_info():
@@ -342,9 +343,20 @@ def user_info():
         db.session.commit()
         return render_template('index.html')
     return render_template('user_info.html',form=form)
+'''
 
 @main.route('/focus')
 @login_required
 def focus():
-    #name=request.args.get('section')
-    return render_template('focus.html')
+    posts = []
+    followings = Follow.query.filter_by(Follow.follower_id==current_user.u_id).first().following_id
+    for i in followings:
+        post = Post.query.filter_by(Post.publisher_id==i).first()
+        posts.append(post)
+    return render_template('focus.html',posts=posts)
+
+@main.route('/detail')
+@login_required
+def detail(post):
+    comments = Post.query.filter_by(Post.toppost_id==post.post_id).first()
+    return render_template('detail.html', comments=comments,post=post)
