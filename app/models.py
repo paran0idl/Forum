@@ -48,15 +48,17 @@ class Post(db.Model):
     toppost_id=db.Column(db.Integer)
     category_id=db.Column(db.Integer)
     post_score=db.Column(db.Integer,default=0)
+    publisher_name=db.Column(db.UnicodeText)
 
-    def __init__(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id):
+    def __init__(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
         self.post_id = post_id
         self.title = title
         self.content = content
         self.publisher_id = publisher_id
         self.post_time = post_time,
         self.toppost = toppost_id,
-        self.category = category_id
+        self.category = category_id,
+        self.publisher_name=publisher_name
 
 class Category(db.Model):
     __tablename__='category'

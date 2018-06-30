@@ -89,17 +89,14 @@ def logout():
 
 @main.route('/',methods = ['get','post'])
 def index():
-    uid=''
-    uname=''
-    if not current_user.is_anonymous:
-        uid = current_user.u_id
-        uname = current_user.user_name
+    if current_user.is_anonymous:
+        return render_template('index.html')
+    uid = current_user.u_id
+    uname = current_user.user_name
     return render_template('index.html',u_id=uid,user_name=uname)
 
 @main.route('/<u_id>',methods=['get','post'])
 def user_view(u_id):
-    print u_id
-    print '6655'
     user=User.query.filter_by(u_id=u_id).first()
     following=Follow.query.filter_by(following_id=u_id).all()
     posts=[]
@@ -110,23 +107,6 @@ def user_view(u_id):
         print post.title
     return render_template('index.html',u_id=u_id,user_name=user.user_name,posts=posts)
     '''
-    #帖子
-    if type is not None:
-        if type == 'water':
-            name = u'灌水区' #4
-            etype = 4
-        elif type == 'source':
-            name = u'资源共享' #3
-            etype = 3
-        elif type == 'phone':
-            name = u'手机' #2
-            etype = 2
-        elif type == 'chat':
-            name = u'站内交流' #1
-            etype = 1
-        else:
-            return redirect(url_for('main.index'))
-
         page = request.args.get('page',1)
         page = int(page)
         hot_post = Essay.query.filter_by(type=etype).filter_by(visible=True).order_by(Essay.visnum.desc()).limit(5).all()
@@ -171,11 +151,9 @@ def user_view(u_id):
                            num = num,
                            user_name = uname,
                            hot = hot)
-                           '''
+                           
     #return render_template('index.html',user_name=uname)
 
-
-'''
 @main.route('/essay',methods = ['get','post'])
 def essay():
     person = 'http://222.18.167.207:4000'
@@ -344,128 +322,6 @@ def mng_comment():
 def error_404():
     return render_template('error404.html')
 
-#API
-@main.route('/phone_get_user')
-def phone_get_user():
-    try:
-        email = request.args.get('email') #1-100 1-100 101->
-        user = User.query.filter_by(email=email).first()
-        if user is None:
-            return 'None'
-        dict = {
-        'uid':user.uid,
-        'username':user.username,
-        'email':user.email,
-        'pwd':user.pwd,
-        'score':user.score,
-        'permission':user.permission
-    }
-        return json.dumps(dict)
-    except Exception:
-        return 'None'
-
-@main.route('/phone_get_search')
-def phone_get_search():
-    try:
-        essay = request.args.get('essay')
-        if essay is not None:
-            re = Essay.query.filter_by(visible=True).filter(Essay.title.like('%' + essay + '%')).all()
-
-        email = request.args.get('email')
-        if email is not None:
-            user = User.query.filter_by(email=email).first()
-            re = user.essays.all()
-
-        if re is None:
-            return redirect(url_for('error_404'))
-        list = []
-        length = len(re)
-        for i in re:
-            dict = {}
-            dict['eid'] = i.eid
-            dict['visnum'] = i.visnum
-            dict['title'] = i.title
-            dict['type'] = i.type
-            dict['time'] = i.time.strftime("%Y-%m-%d %H:%M:%S")
-            dict['author'] = i.author
-            dict['author_name'] = i.author_name
-            list.append(dict)
-        d = {'result': list}
-        return json.dumps(d)
-    except Exception:
-        return 'None'
-
-@main.route('/phone_get_comment')
-def phone_get_comment():
-    try:
-        eid = request.args.get('eid')
-        eid = int(eid)
-        essay = Essay.query.filter_by(visible=True).filter_by(eid=eid).first()
-        if essay is None:
-            return 'None'
-        comments = essay.comments.filter_by(visible=True).all()
-        list = []
-        d = {
-                'cid': 0,
-                'body':essay.essay,
-                'time':essay.time.strftime("%Y-%m-%d %H:%M:%S"),
-                'author':essay.author,
-                'author_name': essay.author_name
-            }
-        list.append(d)
-        for comment in comments:
-            dict = {
-                'cid': comment.cid,
-                'body': comment.body,
-                'time': comment.time.strftime("%Y-%m-%d %H:%M:%S"),
-                'author': comment.author,
-                'author_name': comment.author_name
-            }
-            list.append(dict)
-            dict = {'result': list}
-        return json.dumps(dict)
-    except Exception:
-        return 'None'
-
-@main.route('/phone_post_essay')
-def phone_post_essay():
-    try:
-        author = request.args.get('uid')
-        title = request.args.get('title')
-        essay = request.args.get('content')
-        type = request.args.get('section')
-        if author and title and essay and type:
-            new = Essay(title=title,author=author,essay=essay,type=type)
-            db.session.add(new)
-            db.session.commit()
-            return '1'
-        return '0'
-    except Exception:
-        return '0'
-
-@main.route('/phone_post_comment')
-def phone_post_comment():
-    try:
-        author = int(request.args.get('uid'))
-        author_name = User.query.filter_by(uid=author).first().username
-        body = request.args.get('content')
-        essay = int(request.args.get('eid'))
-
-        new = Comment(body=body,author=author,essay=essay,author_name=author_name)
-        db.session.add(new)
-        db.session.commit()
-        return '1'
-    except Exception:
-        return '0'
-
-@main.route('/get_my_code')
-def get_my_code():
-    return redirect(url_for('static',filename='work.rar'))
-
-@main.route('/get_apk')
-def get_apk():
-    return redirect(url_for('static',filename='a.apk'))
-
 '''
 
 @main.route('/user_center')
@@ -479,7 +335,7 @@ def user_center():
 def user_info():
     form = UserInfo()
     if form.validate_on_submit():
-        result = User.query.filter_by(User.user_name == 'za').first()
+        result = User.query.filter_by(User.user_name == current_user.user_name).first()
         result.user_name=form.username.data
         result.user_pwd=form.newpasswd.data
         result.user_email=form.email.data
@@ -492,16 +348,3 @@ def user_info():
 def focus():
     #name=request.args.get('section')
     return render_template('focus.html')
-
-
-
-'''
-#将数据转换为字典，举报视图函数使用
-def data_to_dict(data):
-    ins = data.split('&')
-    data = {}
-    for i in ins:
-        i = i.split('=')
-        data[i[0]] = i[1]
-    return data
-'''''
