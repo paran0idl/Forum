@@ -253,19 +253,8 @@ def mng_comment():
 def error_404():
     return render_template('error404.html')
 
-'''
 
-@main.route('/user_center')
-@login_required
-def user_center():
-    name=current_user.user_name
-    followed = Follow.query.filter_by(Follow.follower_id == current_user.u_id).first()
-    followed_cnt = len(followed)
-    fan_cnt = len(Follow.query.filter_by(Follow.followed_id==current_user.u_id).first())
-    posts = Post.query.filter_by(Post.publisher_id==current_user.u_id).first()
-    return render_template('user_center.html',name=name,followed=followed,followed_cnt=followed_cnt,fan=fan_cnt,posts=posts)
 
-'''
 @main.route('/user_info')
 @login_required
 def user_info():
@@ -299,12 +288,6 @@ def focus(followed):
         post = Post.query.filter_by(Post.publisher_id==i).first()
         posts.append(post)
     return render_template('focus.html',posts=posts)
-
-@main.route('/detail')
-@login_required
-def detail(post):
-    comments = Post.query.filter_by(Post.toppost_id==post.post_id).first()
-    return render_template('detail.html', comments=comments,post=post)
 
 @main.route('/detail')
 @login_required
