@@ -44,26 +44,42 @@ def index():
         user=None
     return render_template('index.html',u_id=uid,user_name=uname,user=user)
 
-@main.route('/user_center')
+@main.route('/user_center',methods=['get','post'])
 @login_required
 def user_center():
     name=current_user.user_name
-    followed = Follow.query.filter_by(Follow.follower_id == current_user.u_id).first()
-    followed_cnt = len(followed)
-    fan_cnt = len(Follow.query.filter_by(Follow.followed_id==current_user.u_id).first())
-    posts = Post.query.filter_by(Post.publisher_id==current_user.u_id).first()
+    followed = Follow.query.filter(Follow.follower_id == current_user.u_id).all()
+    if followed is not None:
+        followed_cnt = len(followed)
+    else:
+        followed_cnt=0
+    fan=Follow.query.filter(Follow.followed_id==current_user.u_id).all()
+    if fan is not None:
+        fan_cnt = len(fan)
+    else:
+        fan_cnt = 0
+    posts = Post.query.filter(Post.publisher_id==current_user.u_id).all()
     return render_template('user_center.html',name=name,followed=followed,followed_cnt=followed_cnt,fan=fan_cnt,posts=posts)
 
-@main.route('/focus')
+@main.route('/focus',methods=['get','post'])
 @login_required
 def focus(followed):
     posts = []
     for i in followed:
-        post = Post.query.filter_by(Post.publisher_id==i).first()
+        post = Post.query.filter(Post.publisher_id==i).first()
         posts.append(post)
     return render_template('focus.html',posts=posts)
 
 @main.route('/detail',methods=['get','post'])
+def detail():
+    post_id=request.args.get('post_id')
+    print post_id
+    toppost=Post.query.filter(Post.post_id==post_id).first()
+    comments=Post.query.filter(Post.toppost_id==post_id).all()
+    print toppost.title
+    return render_template('detail.html',toppost=toppost,comments=comments)
+
+@main.route('/writepost',methods=['get','post'])
 @login_required
 def writepost():
     writeform=WriteForm()
