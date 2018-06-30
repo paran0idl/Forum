@@ -80,7 +80,6 @@ class Post(db.Model):
     toppost_id=db.Column(db.Integer)
     category_id=db.Column(db.Integer)
     post_score=db.Column(db.Integer,default=0)
-    publisher_name=db.Column(db.UnicodeText)
 
     def __init__(self,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
         self.title = title
@@ -94,7 +93,8 @@ class Post(db.Model):
 class Category(db.Model):
     __tablename__='category'
     category_id=db.Column(db.Integer,primary_key=True,index=True,autoincrement=True,unique=True)
-    topic_id=db.Column(db.Integer)
+    category_name=db.Column(db.String(64))
+
 
     def __init__(self,category_id,topic_id):
         self.category_id = category_id

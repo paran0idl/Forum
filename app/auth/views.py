@@ -6,10 +6,11 @@ from .forms import LoginForm, RegistrationForm
 from .. import db
 from ..token import generate_confirmation_token,confirm_token
 from ..email import send_email
-
+from ..models import Category
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    category = Category.query.all()
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(user_email=form.email.data).first()
@@ -20,7 +21,7 @@ def login():
                 next = url_for('main.index')
             return redirect(next)
         flash('Invalid username or password.')
-    return render_template('auth/login.html', form=form)
+    return render_template('auth/login.html', form=form,category=category)
 
 @auth.route('/logout')
 @login_required
@@ -31,6 +32,7 @@ def logout():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    category = Category.query.all()
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(user_email=form.email.data,
@@ -43,7 +45,7 @@ def register():
                    'email/confirm', user=user, token=token)
         flash('A confirmation email has been sent to you by email.')
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', form=form)
+    return render_template('auth/register.html', form=form,category=category)
 
 
 

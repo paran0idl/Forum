@@ -8,6 +8,7 @@ from app.models import User,Post,Follow
 from .forms import RegisterForm,WriteForm,CommentForm
 from datetime import datetime
 from .. import db
+from ..models import Category
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -34,15 +35,49 @@ def admin():
 
 @main.route('/',methods = ['get','post'])
 def index():
+    category=Category.query.all()
     uid=''
     uname=''
+    posts=Post.query.filter_by(toppost_id=0).all()
     if not current_user.is_anonymous:
         uid = current_user.u_id
         uname = current_user.user_name
         user=current_user
     else:
         user=None
-    return render_template('index.html',u_id=uid,user_name=uname,user=user)
+    return render_template('index.html',u_id=uid,user_name=uname,user=user,category=category,posts=posts)
+
+@main.route('/post/<toppost_id>',methods=['get','post'])
+def post(toppost_id):
+    category = Category.query.all()
+    posts=[]
+    print toppost_id
+    posts.append(Post.query.filter_by(post_id=toppost_id).first())
+    for p in Post.query.filter_by(toppost_id=toppost_id).all():
+        posts.append(p)
+    uid = ''
+    uname = ''
+    if not current_user.is_anonymous:
+        uid = current_user.u_id
+        uname = current_user.user_name
+        user = current_user
+    else:
+        user = None
+    return render_template('Posts.html',u_id=uid,user_name=uname,user=user,category=category,posts=posts)
+
+@main.route('/category/<category_id>',methods=['get','post'])
+def category(category_id):
+    posts=[]
+    posts=Post.query.filter_by(category_id=category_id).all()
+    uid = ''
+    uname = ''
+    if not current_user.is_anonymous:
+        uid = current_user.u_id
+        uname = current_user.user_name
+        user = current_user
+    else:
+        user = None
+    return render_template('index.html', u_id=uid, user_name=uname, user=user, category=category, posts=posts)
     '''
         page = request.args.get('page',1)
         page = int(page)
@@ -299,7 +334,7 @@ def focus(followed):
 @login_required
 def writepost():
     writeform=WriteForm()
-    print datetime.now()
+    print writeform.name.data
     if writeform.validate_on_submit():
         post = Post(writeform.name.data,
                     writeform.text.data,

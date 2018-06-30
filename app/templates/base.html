@@ -30,9 +30,24 @@
       <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <script src="../static/layui/layui.js"></script>
+    <script src="../static/layui/css/layui.css"></script>
+    <style>
+
+        .right1{
+            position:absolute !important;
+            right:80px;
+        }
+        .right2{
+            position:absolute !important;
+            right:30px;
+        }
+    </style>
   </head>
 <body>
 {% block top_nav %}
+
 <nav class="navbar navbar-default">
         <div class="container">
           <div class="navbar-header">
@@ -42,33 +57,25 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Project name</a>
+            <a class="navbar-brand" href="{{url_for('main.category',category_id=category_id)}}">Project name</a>
           </div>
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+                {% for c in category %}
+                <li><a href="">{{c.category_name}}</a></li>
+                {% endfor %}
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li class="dropdown-header">Nav header</li>
-                  <li><a href="#">Separated link</a></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
                 {% if user %}
-                <li><a href="#">{{user.user_name}}</a></li>
-                 <li><a href="{{url_for('auth.logout')}}">登出</a></li>
+                <li class="right1"><a href="#">{{user.user_name}}</a></li>
+                 <li class="right2"><a href="{{url_for('auth.logout')}}">登出</a></li>
                 {% if user.user_permission==4 %}
                 <li><a href={{url_for('main.admin')}}>admin</a></li>
                 {% endif %}
                 {% else %}
-                <li><a href={{url_for('auth.login')}}>登录</a></li>
-                <li><a href="{{url_for('auth.register')}}">注册</a></li>
+
+                <li class="right1"><a href={{url_for('auth.login')}}>登录</a></li>
+                <li class="right2"><a href="{{url_for('auth.register')}}">注册</a></li>
+
                 {% endif %}
               </li>
 

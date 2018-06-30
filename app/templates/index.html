@@ -1,6 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        .icon{
+	float:left;
+	margin:10px 5px 10px 10px;
+}
+body{
+	background-color:#919191;
+}
+#father{
+	width:90%;
+	margin-left:5%;
+	float:left;
+	background-color:#fff;
+	height:80px;
+	margin-bottom:1px;
+}
+.info{
+	float:left;
+	margin-left:10px;
+	color:#000;
+}
+img{
+	border-radius:5px;
+}
+.parts{
+
+}
+.p{
+	font-size:22px;
+	margin:10px 0 10px 0;
+}
+.writer{
+	margin-left:20px;
+}
+a{
+	text-decoration:none;
+}
+li{
+	float:left;
+	margin:0 30px 0 30px !important;
+	list-style-type: disc !important;
+	line-height:15px;
+}
+.tags{
+	float:left;
+}
+ul{
+	float:left;
+	left:20px;
+}
+.replycount{
+	width:auto;
+	height:25px;
+	border-radius:5px;
+	background-color:#919191;
+	padding:0 6px;
+	color:#fff;
+}
+.third{
+	float:right;
+	margin-right:30px;
+	line-height:80px;
+}
+    </style>
 </head>
 <body>
 {% extends 'base.html' %}
@@ -9,11 +73,31 @@
 {% endblock %}
 
 {% block page_content%}
+{% for post in posts %}
+<div id="father">
+		<div class="parts">
+			<div class="icon"><img src="logo.jpg" width="60px" height="60px" /></div>
+			<div class="info">
+				<div class="p"><a href={{url_for('main.post',toppost_id=post.post_id)}}>{{post.title}}</a></div>
+				<span class="layui-badge layui-bg-gray tags">DNS</span>
+				<ul>
+					<li>{{post.publisher_name}}</li>
+					<li>{{post.post_time}}</li>
+					<li>查看需要积分:{{post.post_score}}</a></li>
+				</ul>
+			</div>
+			<div class="third">
+				<span class="replycount">4</span>
+			</div>
+		</div>
+	</div>
+{% endfor%}
 {% if user.email_confirm==false %}
 <h1>not comfirm</h1>
 <a href={{url_for('auth.resend_email')}}><button type="button" class="btn btn-lg btn-default">Default</button></a>
 {% else %}
 <a href={{url_for('main.writepost')}} <h1>confirm</h1></a>
+
 {% endif %}
 {% endblock %}
 </body>
