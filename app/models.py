@@ -64,7 +64,7 @@ class User(UserMixin,db.Model):
             raise NotImplementedError('No `id` attribute - override `get_id`')
 
     def publish_post(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id):
-        tmp = Post(po_st_id,title,content,publisher_id,post_time,toppost_id,category_id)
+        tmp = Post(post_id,title,content,publisher_id,post_time,toppost_id,category_id)
         db.session.add(tmp)
         db.session.commit()
 
@@ -82,13 +82,16 @@ class Post(db.Model):
     post_score=db.Column(db.Integer,default=0)
     publisher_name=db.Column(db.UnicodeText)
 
+
     def __init__(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
         self.post_id = post_id
+
+    def __init__(self,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
         self.title = title
         self.content = content
         self.publisher_id = publisher_id
         self.post_time = post_time,
-        self.toppost = toppost_id,
+        self.toppost_id = toppost_id,
         self.category = category_id,
         self.publisher_name=publisher_name
 
@@ -100,27 +103,3 @@ class Category(db.Model):
     def __init__(self,category_id,topic_id):
         self.category_id = category_id
         self.topic_id = topic_id
-
-
-
-
-
-class UpLoad:
-    def allowed_file(self,filename):
-        ALLOWED_EXTENSIONS = set(['png', 'jpg', 'JPG', 'PNG'])
-        return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-    def upload(self):
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        file_dir = os.path.join(basedir,'upload')
-        if not os.path.exists(file_dir):
-            os.makedirs(file_dir)
-        f = request.files['file']
-        if f and self.allowed_file(f.filename):
-            fname=secure_filename(f.filename)
-            ext = fname.rsplit('.', 1)[1]
-            unix_time = int(time.time())
-            new_filename = str(unix_time)+'.'+ext
-            f.save(os.path.join(file_dir, new_filename))
-            return True
-        return False
