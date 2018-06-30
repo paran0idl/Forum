@@ -27,3 +27,7 @@ class RegisterForm(FlaskForm):
     password2 = PasswordField('Confirm password')
     submit = SubmitField('Register')
 
+class UserInfo(FlaskForm):
+
+    username = StringField('username')
+

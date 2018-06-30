@@ -5,14 +5,11 @@ from flask import render_template
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from app import login_manager
-from flask_login import login_user,logout_user
+from flask_login import login_user,logout_user,current_user
 from . import main
 from .. import db
 from app.models import Permission,User,Post,Category,Follow
-from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm
-import requests
-import time
-#from manage import app
+from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm,UserInfo
 from ..token import generate_confirmation_token,confirm_token
 from ..email import send_email
 @login_manager.user_loader
@@ -27,26 +24,66 @@ def register():
 
 @main.route('/login',methods=['get','post'])
 def login():
+<<<<<<< HEAD
     return render_template('login.html')
+=======
+    uid = session.get('uid') #防止直接切入login网址造成重复登录
+    if uid is not None:
+        name = User.query.filter_by(u_id=uid).first().user_name
+    else:
+        name=''
+    form = LoginForm()
+    if form.validate_on_submit():
+        if uid is None:
+            print form.email.data
+            user = User.query.filter_by(user_email=form.email.data).first()
+            print '6655'
+            if user is not None and user.user_pwd == form.password.data:
+                login_user(user)
+                session['uid'] = user.u_id
+                session['permission'] = user.user_permission
+                eid = request.args.get('eid')
+                section = request.args.get('section')
+                if eid is not None:
+                    return redirect(url_for('main.essay',eid=eid))
+                if section is not None:
+                    return redirect(url_for('main.index',section=section))
+                print '6324'
+                return redirect(url_for('main.user_view',u_id=user.u_id))
+            else:
+                flash('Username or Password error!')
+        else:
+            flash('You have login,Please logout first!')
+    return render_template('login.html',form = form,user_name = name)
+>>>>>>> 105bc813f4894af9da48b072a943edd40f9e5fa6
 
 @main.route('/logout',methods=['get','post'])
 @login_required
 def logout():
     logout_user()
-    session['uid'] = None
-    session['permission'] = 0
     return redirect(url_for('main.index'))
 
 
 @main.route('/',methods = ['get','post'])
 def index():
+<<<<<<< HEAD
 
     return render_template('index.html')
+=======
+    uid=''
+    uname=''
+    if not current_user.is_anonymous:
+        uid = current_user.u_id
+        uname = current_user.user_name
+    return render_template('index.html',u_id=uid,user_name=uname)
+>>>>>>> 105bc813f4894af9da48b072a943edd40f9e5fa6
 
 @main.route('/<u_id>',methods=['get','post'])
 def user_view(u_id):
+    print u_id
+    print '6655'
     user=User.query.filter_by(u_id=u_id).first()
-    following=Follow.query.filter_by(user_id=u_id).all()
+    following=Follow.query.filter_by(following_id=u_id).all()
     posts=[]
     for f in following:
         for post in Post.query.filter_by(publisher_id=f.following_id).all():
@@ -411,11 +448,36 @@ def get_my_code():
 def get_apk():
     return redirect(url_for('static',filename='a.apk'))
 
+'''
+
 @main.route('/user_center')
+@login_required
 def user_center():
     name=request.args.get('section')
     return render_template('user_center.html',name=name)
 
+@main.route('/user_info')
+@login_required
+def user_info():
+    form = UserInfo()
+    if form.validate_on_submit():
+        result = User.query.filter_by(User.user_name == 'za').first()
+        result.user_name=form.username.data
+        result.user_pwd=form.newpasswd.data
+        result.user_email=form.email.data
+        db.session.commit()
+        return render_template('index.html')
+    return render_template('user_info.html',form=form)
+
+@main.route('/focus')
+@login_required
+def focus():
+    #name=request.args.get('section')
+    return render_template('focus.html')
+
+
+
+'''
 #将数据转换为字典，举报视图函数使用
 def data_to_dict(data):
     ins = data.split('&')
