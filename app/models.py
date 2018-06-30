@@ -13,9 +13,9 @@ class Permission:
 
 class Follow(db.Model):
     __tablename__ = 'Follow'
-    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+    follower_id = db.Column(db.Integer, db.ForeignKey('user.u_id'),
                             primary_key=True)
-    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+    followed_id = db.Column(db.Integer, db.ForeignKey('user.u_id'),
                             primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
