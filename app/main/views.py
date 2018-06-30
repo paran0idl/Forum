@@ -12,7 +12,6 @@ from app.models import Permission,User,Post,Category,Follow
 from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm,UserInfo
 from ..token import generate_confirmation_token,confirm_token
 from ..email import send_email
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -62,6 +61,7 @@ def login():
         if uid is None:
             print form.email.data
             user = User.query.filter_by(user_email=form.email.data).first()
+            print '6655'
             if user is not None and user.user_pwd == form.password.data:
                 login_user(user)
                 session['uid'] = user.u_id
@@ -73,7 +73,6 @@ def login():
                 if section is not None:
                     return redirect(url_for('main.index',section=section))
                 print '6324'
-                print user.u_id
                 return redirect(url_for('main.user_view',u_id=user.u_id))
             else:
                 flash('Username or Password error!')
@@ -85,55 +84,30 @@ def login():
 @login_required
 def logout():
     logout_user()
-    session['uid'] = None
-    session['permission'] = 0
     return redirect(url_for('main.index'))
 
 
 @main.route('/',methods = ['get','post'])
 def index():
-    email = request.args.get('email')
-    #同步数据库
-    if email is not None:
-        r = requests.get(url='http://222.18.167.207:4000/others')  # 最基本的GET请求
-        html = r.text
-        js = json.loads(html)
-        for i in js['result']:
-            if i['email'] == email:
-                um = User(user_name=i['username'], user_pwd=i['passwordd'], user_email=i['email'])
-                db.session.add(um)
-                db.session.commit()
-                break
-
-    type = request.args.get('section')
-    uid = session.get('uid')
-    person = 'http://222.18.167.207:4000'
-    print uid
-    if uid is None:
-        uname = ''
-    else:
-        p = User.query.filter_by(u_id=uid).first()
-        uname = p.user_name
-        person = person + '?email=' + p.user_email
-
-    return render_template('index.html',u_id=uid,user_name=uname,person=person)
+    uid=''
+    uname=''
+    if not current_user.is_anonymous:
+        uid = current_user.u_id
+        uname = current_user.user_name
+    return render_template('index.html',u_id=uid,user_name=uname)
 
 @main.route('/<u_id>',methods=['get','post'])
 def user_view(u_id):
-    print '6655'
     print u_id
-    print '233333'
+    print '6655'
     user=User.query.filter_by(u_id=u_id).first()
     following=Follow.query.filter_by(following_id=u_id).all()
     posts=[]
-    print user.user_name, u_id, posts
     for f in following:
         for post in Post.query.filter_by(publisher_id=f.following_id).all():
             posts.append(post)
     for post in posts:
         print post.title
-
-    print user.user_name, u_id, posts
     return render_template('index.html',u_id=u_id,user_name=user.user_name,posts=posts)
     '''
     #帖子
@@ -504,18 +478,13 @@ def user_center():
 @login_required
 def user_info():
     form = UserInfo()
-    print 'ywwuyi died'
     if form.validate_on_submit():
-        print current_user.user_name
-        result = User.query.filter_by(User.user_name == current_user.user_name).first()
+        result = User.query.filter_by(User.user_name == 'za').first()
         result.user_name=form.username.data
         result.user_pwd=form.newpasswd.data
         result.user_email=form.email.data
         db.session.commit()
-        flash('nmsl')
-        #return redirect('index.html',form=form)
-
-    print 'nmsl'
+        return render_template('index.html')
     return render_template('user_info.html',form=form)
 
 @main.route('/focus')
