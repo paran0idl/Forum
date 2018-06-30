@@ -1,84 +1,24 @@
 # -*- coding: utf-8 -*-
-import json
-from flask import Flask,redirect,session,url_for,flash,request
+from flask import redirect,url_for,request
 from flask import render_template
-from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
 from app import login_manager
-from flask_login import login_user,logout_user,current_user
+from flask_login import logout_user,current_user,login_required
 from . import main
-from .. import db
-from app.models import Permission,User,Post,Category,Follow
-from .forms import  WriteForm,CommentForm,DelForm,LoginForm,RegisterForm,UserInfo
-from ..token import generate_confirmation_token,confirm_token
-from ..email import send_email
+from app.models import User,Post,Follow
+from .forms import  RegisterForm
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-URL_REGISTER = 'http://222.18.167.207:4000/auth/register'
-#视图函数
+
 @main.route('/register',methods=['get','post'])
 def register():
     form = RegisterForm()
-    if form.validate_on_submit():
-        new_user_name=User.query.filter_by(user_name=form.username.data).first()
-        new_user_email=User.query.filter_by(user_email=form.email.data).first()
-        if new_user_name!=None and new_user_email!=None:
-            flash("User Exist")
-        elif form.password.data!=form.password2.data:
-            flash("Password not confirmed")
-        elif form.username.data=='' or form.email.data=='' or form.password.data=='' or form.password2.data=='':
-            flash("Info not complete")
-        else:
-            new_user=User(user_name=form.username.data,user_email=form.email.data,user_pwd=form.password.data)
-            db.session.add(new_user)
-            db.session.commit()
-            print ("add user success")
-            token = generate_confirmation_token(new_user.user_email)
-            send_email(new_user.user_email, 'Confirm Your Account',
-                   'email/confirm', user=new_user, token=token)
-            flash('A confirmation email has been sent to you by email.')
-            user= User.query.filter_by(user_name=form.username.data).first()
-            login_user(user)
-            session['uid']=user.u_id
-            session['permission']=user.user_permission
-            return redirect(url_for('main.index'))
-    form.username.data = ''
-    form.email.data = ''
-    form.password.data = ''
-    form.password2.data = ''
-    return render_template('register.html', form=form,user_name='')
+    return render_template('register.html', form=form)
 
 @main.route('/login',methods=['get','post'])
 def login():
-    uid = session.get('uid') #防止直接切入login网址造成重复登录
-    if uid is not None:
-        name = User.query.filter_by(u_id=uid).first().user_name
-    else:
-        name=''
-    form = LoginForm()
-    if form.validate_on_submit():
-        if uid is None:
-            print form.email.data
-            user = User.query.filter_by(user_email=form.email.data).first()
-            print '6655'
-            if user is not None and user.user_pwd == form.password.data:
-                login_user(user)
-                session['uid'] = user.u_id
-                session['permission'] = user.user_permission
-                eid = request.args.get('eid')
-                section = request.args.get('section')
-                if eid is not None:
-                    return redirect(url_for('main.essay',eid=eid))
-                if section is not None:
-                    return redirect(url_for('main.index',section=section))
-                print '6324'
-                return redirect(url_for('main.user_view',u_id=user.u_id))
-            else:
-                flash('Username or Password error!')
-        else:
-            flash('You have login,Please logout first!')
-    return render_template('login.html',form = form,user_name = name)
+    return render_template('login.html')
 
 @main.route('/logout',methods=['get','post'])
 @login_required
@@ -89,10 +29,11 @@ def logout():
 
 @main.route('/',methods = ['get','post'])
 def index():
-    if current_user.is_anonymous:
-        return render_template('index.html')
-    uid = current_user.u_id
-    uname = current_user.user_name
+    uid=''
+    uname=''
+    if not current_user.is_anonymous:
+        uid = current_user.u_id
+        uname = current_user.user_name
     return render_template('index.html',u_id=uid,user_name=uname)
 
 @main.route('/<u_id>',methods=['get','post'])
