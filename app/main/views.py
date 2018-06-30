@@ -5,7 +5,9 @@ from app import login_manager
 from flask_login import logout_user,current_user,login_required
 from . import main
 from app.models import User,Post,Follow
-from .forms import  RegisterForm
+from .forms import RegisterForm,WriteForm,CommentForm
+import datetime
+from .. import db
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -251,19 +253,8 @@ def mng_comment():
 def error_404():
     return render_template('error404.html')
 
-'''
 
-@main.route('/user_center')
-@login_required
-def user_center():
-    name=current_user.user_name
-    followed = Follow.query.filter_by(Follow.follower_id == current_user.u_id).first()
-    followed_cnt = len(followed)
-    fan_cnt = len(Follow.query.filter_by(Follow.followed_id==current_user.u_id).first())
-    posts = Post.query.filter_by(Post.publisher_id==current_user.u_id).first()
-    return render_template('user_center.html',name=name,followed=followed,followed_cnt=followed_cnt,fan=fan_cnt,posts=posts)
 
-'''
 @main.route('/user_info')
 @login_required
 def user_info():
@@ -278,6 +269,17 @@ def user_info():
     return render_template('user_info.html',form=form)
 '''
 
+
+@main.route('/user_center')
+@login_required
+def user_center():
+    name=current_user.user_name
+    followed = Follow.query.filter_by(Follow.follower_id == current_user.u_id).first()
+    followed_cnt = len(followed)
+    fan_cnt = len(Follow.query.filter_by(Follow.followed_id==current_user.u_id).first())
+    posts = Post.query.filter_by(Post.publisher_id==current_user.u_id).first()
+    return render_template('user_center.html',name=name,followed=followed,followed_cnt=followed_cnt,fan=fan_cnt,posts=posts)
+
 @main.route('/focus')
 @login_required
 def focus(followed):
@@ -289,6 +291,34 @@ def focus(followed):
 
 @main.route('/detail')
 @login_required
-def detail(post):
-    comments = Post.query.filter_by(Post.toppost_id==post.post_id).first()
-    return render_template('detail.html', comments=comments,post=post)
+def writepost():
+    writeform=WriteForm()
+    if writeform.validate_on_submit():
+        post = Post(writeform.name.data,
+                    writeform.text.data,
+                    current_user.u_id,
+                    datetime.now(),
+                    0,
+                    1,
+                    current_user.user_name
+                    )
+        db.session.add(post)
+        db.session.commit()
+    return render_template('WritePost.html',form=writeform)
+
+@main.route('/reply')
+@login_required
+def reply(toppost_id):
+    form=CommentForm()
+    if form.validate_on_submit():
+        post = Post('reply',
+                    form.text.data,
+                    current_user.u_id,
+                    datetime.now(),
+                    toppost_id,
+                    1,
+                    current_user.user_name
+                    )
+        db.session.add(post)
+        db.session.commit()
+    return render_template('reply.html',form=form)
