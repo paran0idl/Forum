@@ -20,8 +20,6 @@ class User(UserMixin,db.Model):
     user_score=db.Column(db.Integer,default=0)
 
     post=db.relationship('Post',backref='post_author', lazy='dynamic')
-    def __repr__(self):
-        return '<User: %s>' % (self.username)
 
     def get_id(self):
         try:
@@ -35,6 +33,7 @@ class Post(db.Model):
     title=db.Column(db.UnicodeText)
     content=db.Column(db.UnicodeText)
     publisher_id=db.Column(db.Integer,db.ForeignKey('user.u_id'))
+    publisher_name=db.Column(db.String(64))
     post_time=db.Column(db.DateTime, index=True, default=datetime.utcnow)
     toppost_id=db.Column(db.Integer)
     category_id=db.Column(db.Integer)

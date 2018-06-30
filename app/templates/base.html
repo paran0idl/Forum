@@ -1,247 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-    <!-- 修改网页名称 -->
-	<title>{{ pagename }}</title>
-	<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
+    <title>Theme Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="../../dist/css/bootstrap-theme.min.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="theme.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
 <body>
-<nav class="navbar navbar-default" role="navigation">
-            <div class="container-fluid">
-            <div class="navbar-header" style="margin-top:10px">
-                <a class="navbar-brand" href="#">论坛</a>
-            </div>
-            <div style="height:30px;margin-top:10px">
-                <ul class="nav navbar-nav">
-                    <li class="active" style="margin-left:50px"><a href="{{url_for('main.index')}}">首页</a></li>
-                    <li><a href="#"></a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li class="divider"></li>
-                            <li><a href="{{url_for('main.index',section='chat')}}">站内交流</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{url_for('main.index',section='phone')}}">手机品牌</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{url_for('main.index',section='source')}}">资源分享</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{url_for('main.index',section='water')}}">灌水区</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#"></a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-
-                {% if user_name != '' %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-right:10px">
-                            <h4 style="float:left;margin-top:-3px">{{user_name}}</h4>&nbsp;&nbsp;
-                            <span class="caret" style="margin-top:-10px"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{person}}">个人空间</a></li>
-                            <li><a href="#">私信</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="logout">注销登录</a></li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <div style="margin-top:10px">
-                        <div style="float:left;margin-left:-40px">
-                            <a href="{{url_for('main.login')}}">登录</a>
-                        </div>|&nbsp;&nbsp;&nbsp;
-                        <div style="float:right;margin-right:30px;">
-                            <a href="{{url_for('main.register')}}">注册</a>
-                        </div>
-                    </div>
-                {% endif %}
-              </ul>
-
-            </div>
-            </div>
-        </nav>
-    <!-- 头部
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-        <div class="navbar-header" style="margin-top:10px">
-            <a class="navbar-brand" href="#">论坛</a>
-        </div>
-        <div style="height:30px;margin-top:10px">
+{% block top_nav %}
+<nav class="navbar navbar-default">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+          </div>
+          <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active" style="margin-left:50px"><a href="{{url_for('main.index')}}">首页</a></li>
-                <li><a href="#"></a></li>
-                <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">板块<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li class="divider"></li>
-                            <li><a href="{{url_for('main.index',section='chat')}}">站内交流</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{url_for('main.index',section='phone')}}">手机品牌</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{url_for('main.index',section='source')}}">资源分享</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{url_for('main.index',section='water')}}">灌水区</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#"></a></li>
-                        </ul>
-                    </li>
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="#">Separated link</a></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+                <li><a href={{url_for('main.login')}}>登录</a></li>
+                <li><a href="{{url_for('main.register')}}">注册</a></li>
+              </li>
+
             </ul>
 
-            <ul class="nav navbar-nav navbar-right">
-            {% if user_name != '' %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-right:10px">
-                        <h4 style="float:left;margin-top:-3px">{{user_name}}</h4>&nbsp;&nbsp;
-                        <span class="caret" style="margin-top:-10px"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{person}}">个人空间</a></li>
-                        <li><a href="#">私信</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="logout">注销登录</a></li>
-                    </ul>
-                </li>
-            {% else %}
-                <div style="margin-top:10px">
-                    <div style="float:left;margin-left:-40px">
-                        {% if sec %}
-                            <a href="{{url_for('main.login',section=sec)}}">登录</a>
-                        {% endif %}
-                    </div>|&nbsp;&nbsp;&nbsp;
-                    <div style="float:right;margin-right:30px;">
-                        <a href="{{url_for('main.register')}}">注册</a>
-                    </div>
-                </div>
-            {% endif %}
-          </ul>
+          </div><!--/.nav-collapse -->
         </div>
-        </div>
-    </nav>
-    -->
-    <!-- flash -->
-
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{message}}
-    </div>
-    {% endfor %}
-    <div class="modal show" style="margin-top:5.0%;z-index:0;overflow-y:auto;overflow-x:hidden;margin-right:-15px;margin-bottom:-15px;">
-        <a id="top"></a> <!--锚点-->
-        <div class="modal-dialog" style="width:80%">
-            <div class="modal-content" style="margin-top:120px">
-                <!-- 标题 -->
-                <div class="modal-header">
-                    <h1 class="text-center text-primary" style="float:left;margin-left:30px">{{modal_name}}</h1>
-                </div>
-                <!-- 帖子 -->
-                <div class="modal-body">
-                    <!-- 热帖 -->
-                    <div class="list-group">
-                        <a href="#" class="list-group-item active"> <!-- 标题 -->
-                            <h3 class="list-group-item-heading">热帖排行</h3>
-                        </a>
-                        {% for i in hot_post %}
-                            <a href="{{ url_for('main.essay',eid=i['eid']) }}" target="_blank" class="list-group-item">
-                                <div style="margin-left:30px">
-                                        <h5 class="list-group-item-heading">{{ i['title'] }}</h5>
-                                        <p class="list-group-item-text" style="margin-left:80%">{{ i['author_name'] }}</p> <!-- 作者，时间 -->
-                                        <p class="list-group-item-text" style="margin-left:80%">{{ i['time'] }}</p> <!-- 作者，时间 -->
-                                </div>
-                            </a>
-                        {% endfor %}
-                    </div>
-
-                    <!-- 按照发帖时间排序 -->
-                    <div class="list-group"> <!-- 正文 -->
-                        <!-- 开始 -->
-                        <a href="#" class="list-group-item active">
-                            <h3 class="list-group-item-heading">全部内容</h3>
-                        </a>
-                        <!-- 正文 -->
-                        {% for i in eassy %}
-                            <a href="{{ url_for('main.essay',eid=i['eid']) }}" target="_blank" class="list-group-item">
-                                <div style="margin-left:30px">
-                                        <h5 class="list-group-item-heading">{{ i['title'] }}</h5>
-                                        <p class="list-group-item-text" style="margin-left:80%">{{ i['author_name'] }}</p> <!-- 作者，时间 -->
-                                        <p class="list-group-item-text" style="margin-left:80%">{{ i['time'] }}</p> <!-- 作者，时间 -->
-                                </div>
-                                {% if delete %}
-                                    <a href={{ url_for('moderate',mtype=1,mid=1) }}><font style="color:red;">删除</font></a>
-                                {% endif %}
-                            </a>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% if page%}{% endif %}
-                <!-- 分页 -->
-                <div class="modal-footer">
-                    <ul class="pager">
-                        {% if page == 1 %}
-                        <li class="previous"><a href="{{url_for('main.index',section=sec,page=1)}}" style="margin-left:300px">&larr; Older</a></li>
-                        {%else%}
-                        <li class="previous"><a href="{{url_for('main.index',section=sec,page=page-1)}}" style="margin-left:300px">&larr; Older</a></li>
-                        {% endif %}
-                        <li class="next"><a href="{{url_for('main.index',section=sec,page=page+1)}}" style="margin-right:300px">Newer &rarr;</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div style="position:absolute;margin-top:280px;margin-left:94%;">
-        <ul class="pager">
-            <!-- 发帖按钮 -->
-            {% if user_name != None and user_name != '' %}
-                <div><a href="#myModal" data-toggle="modal" ><img src="{{ url_for('static', filename='icons/write.png') }}" style="width:40px;height:40px"></a></div>
-            {% else %}
-                <div><a onclick="confirm('请登录后使用')"><img src="{{ url_for('static',filename='icons/write.png') }}" style="width:40px;height:40px"></a></div>
-            {% endif %}
-            <!-- top -->
-            <div><a href="#top" target="_self"><img src="{{ url_for('static', filename='icons/top.png') }}" style="margin-top:50px;width:40px;height:40px"></a></div>
-        </ul>
-    </div>
-
-    <!-- 跟帖 -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3 class="modal-title" id="myModalLabel">发帖</h3>
-                </div>
-                <!-- post提交跟帖 -->
-                <form method="post">
-                    <div class="modal-body">
-                        {{form.hidden_tag()}}
-                        {{form.name(class="form-control",placeholder="主题")}}
-                        <p></p>
-                        {{form.text(class="form-control",placeholder="内容",style="height:150px")}}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        {{form.submit(class="btn btn-primary")}}
-                    </div>
-                </form>
-                <!--
-                <form method="post">
-                    <div class="modal-body">
-                        <input type="text" class="form-control" id="name" placeholder="主题">
-                        <p></p>
-                        <textarea class="form-control" id="name" placeholder="内容" style="height:150px"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="submit" class="btn btn-primary">发帖</button>
-                    </div>
-                </form>
-                -->
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
-    </div>
-
+      </nav>
+{% endblock %}
+{% block login%}
+{% endblock %}
+{% block register %}
+{% endblock %}
 </body>
