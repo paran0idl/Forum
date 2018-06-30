@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from flask import redirect,url_for,request
+from flask import redirect,url_for
 from flask import render_template
 from app import login_manager
 from flask_login import logout_user,current_user,login_required
 from . import main
 from app.models import User,Post,Follow
-from .forms import  RegisterForm
+from .forms import  RegisterForm,WriteForm
+from datetime import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -305,3 +306,18 @@ def focus(followed):
 def detail(post):
     comments = Post.query.filter_by(Post.toppost_id==post.post_id).first()
     return render_template('detail.html', comments=comments,post=post)
+
+@main.route('/detail')
+@login_required
+def writepost():
+    writeform=WriteForm()
+    if writeform.validate_on_submit():
+        post = Post()
+        post.title=writeform.name.data
+        post.content=writeform.text.data
+        post.publisher_id=current_user.u_id
+        post.publisher_name=current_user.user_name
+        post.post_time=datetime.now()
+        post.toppost_id=0
+
+    return render_template('WritePost.html')
