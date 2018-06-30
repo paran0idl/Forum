@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends 'navbar.html' %}
+{% block top_navbar%}
+    {{super()}}
+{% endblock %}
+{% block page_content%}
+    <div class="panel panel-success">
+        <p class="text-left">{{show_post.publisher_name}}</p>
+        <p></p>
+        <p class="text-left">{{show_post.post_time}}</p>
+    </div>
+    <div class="panel panel-collapse">
+        <div class="page-header">
+            <h1 class="panel-title">{{show_post.title}}</h1>
+        </div>
+        <div class="panel-body">
+            <p class="text-left">{{show_post.content}}</p>
+            <p></p>
+        </div>
+    </div>
+
+{% endblock %}
+{% block buttom_navbar%}
+    {{super()}}
+{% endblock %}
+</body>
+</html>

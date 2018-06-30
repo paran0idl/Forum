@@ -80,6 +80,10 @@ class Post(db.Model):
     category_id=db.Column(db.Integer)
     post_score=db.Column(db.Integer,default=0)
 
+
+    def __init__(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
+        self.post_id = post_id
+
     def __init__(self,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
         self.title = title
         self.content = content
