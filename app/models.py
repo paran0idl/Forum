@@ -22,13 +22,9 @@ class User(UserMixin,db.Model):
     email_confirm=db.Column(db.Boolean,default=0)
     user_score=db.Column(db.Integer,default=0)
 
-<<<<<<< HEAD
     post=db.relationship('Post',backref='post_author', lazy='dynamic')
-=======
-    post= db.relationship('Post',backref='post_author', lazy='dynamic')
     def __repr__(self):
         return '<User: %s>' % (self.username)
->>>>>>> 105bc813f4894af9da48b072a943edd40f9e5fa6
 
     def get_id(self):
         try:
