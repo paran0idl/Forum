@@ -6,7 +6,7 @@ from flask_login import logout_user,current_user,login_required
 from . import main
 from app.models import User,Post,Follow
 from .forms import RegisterForm,WriteForm,CommentForm
-import datetime
+from datetime import datetime
 from .. import db
 
 @login_manager.user_loader
@@ -295,10 +295,11 @@ def focus(followed):
         posts.append(post)
     return render_template('focus.html',posts=posts)
 
-@main.route('/detail')
+@main.route('/detail',methods=['get','post'])
 @login_required
 def writepost():
     writeform=WriteForm()
+    print datetime.now()
     if writeform.validate_on_submit():
         post = Post(writeform.name.data,
                     writeform.text.data,
@@ -316,6 +317,7 @@ def writepost():
 @login_required
 def reply(toppost_id):
     form=CommentForm()
+
     if form.validate_on_submit():
         post = Post('reply',
                     form.text.data,
