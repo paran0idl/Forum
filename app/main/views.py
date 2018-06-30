@@ -28,6 +28,9 @@ def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
+@main.route('/admin',methods=['get','post'])
+def admin():
+    return redirect('/admin')
 
 @main.route('/',methods = ['get','post'])
 def index():
@@ -36,7 +39,10 @@ def index():
     if not current_user.is_anonymous:
         uid = current_user.u_id
         uname = current_user.user_name
-    return render_template('index.html',u_id=uid,user_name=uname)
+        user=current_user
+    else:
+        user=None
+    return render_template('index.html',u_id=uid,user_name=uname,user=user)
     '''
         page = request.args.get('page',1)
         page = int(page)
