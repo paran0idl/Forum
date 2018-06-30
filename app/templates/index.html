@@ -92,17 +92,7 @@ ul{
 		</div>
 	</div>
 {% endfor%}
-{% if user.email_confirm==false %}
-<h1>not comfirm</h1>
-<a href={{url_for('auth.resend_email')}}><button type="button" class="btn btn-lg btn-default">Default</button></a>
-{% else %}
-<a href={{url_for('main.writepost')}} <h1>confirm</h1></a>
-<<<<<<< HEAD
-
-=======
-<a href={{url_for('main.user_center')}} <h1>user_center</h1></a>
->>>>>>> 0841001ff1dae91c8c20007870a9f5127c6e9e03
-{% endif %}
+<a href={{url_for('main.writepost')}}>writepost</a>
 {% endblock %}
 </body>
 </html>
