@@ -1,59 +1,32 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Login</title>
-    <link href="{{url_for('static',filename='Wopop_files/style_log.css')}}" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/style.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/userpanel.css')}}">
-    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/jquery.ui.all.css')}}">
 </head>
-
-<body class="login" mycollectionplug="bind">
-{% extends 'navbar.html'%}
-{% block top_navbar %}
+<body>
+{% extends 'base.html'%}
+{% block top_nav %}
 {{super()}}
 {% endblock %}
 
-{% block page_content %}
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{message}}
-    </div>
-    {% endfor %}
-    <div class="login_m">
-        <form method="post">
-            {{form.hidden_tag()}}
-                <div class="login_boder">
-                    <div class="login_padding" id="login_model">
-                        <h2>Email</h2>
-                        <label>
-                            {{form.email(class="txt_input txt_input2" )}}
-                        </label>
-                        <h2>Password</h2>
-                        <label>
-                            {{form.password(class="txt_input")}}
-                        </label>
+{% block login %}
+<div class="container">
 
-                        <div class="rem_sub">
-                            <label>
-                                <br/>
-                                <div style="margin-right:100px">
-                                    {{form.submit(class="sub_button")}}
-                                </div>
-                            </label>
-                        </div>
-                </div>
-            </div><!--login_boder end-->
-            </form>
-    </div><!--login_m end-->
-{% endblock %}
-{% block buttom_navbar %}
-{{super()}}
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+    </div> <!-- /container -->
 {% endblock %}
 </body>
+
 </html>
