@@ -1,0 +1,15 @@
+<ul class="focus">
+    {% for post in posts %}
+    <li class="post">
+        <div class="post-content">
+            <div class="post-date">{{ post.post_time }}</div>
+            <div class="post-author">{{ post.publisher_name }}</div>
+            <div class="post-title">
+                <a herf="{{url_for('detail'),post=post}}">
+                    {{ post.title }}
+                </a>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
