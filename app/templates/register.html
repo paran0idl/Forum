@@ -1,17 +1,67 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Register</title>
+    <link href="{{url_for('static',filename='Wopop_files/style_log.css')}}" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/style.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/userpanel.css')}}">
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Wopop_files/jquery.ui.all.css')}}">
 </head>
-<body>
-{% extends 'base.html'%}
 
-{% block top_nav%}
+<body class="login" mycollectionplug="bind">
+{% extends 'navbar.html'%}
+{% block top_navbar %}
+{{ super() }}
+{% endblock %}
+{% block page_content %}
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{message}}
+    </div>
+    {% endfor %}
+    <div class="login_m">
+        <form method="post">
+            {{form.hidden_tag()}}
+                <div class="login_boder">
+                    <div class="login_padding"  id="login_model">
+                        <h2>Email</h2>
+                        <label>
+                            {{form.email(class="txt_input")}}
+                        </label>
+                        <h2>Username</h2>
+                        <label>
+                            {{form.username(class="txt_input")}}
+                        </label>
+                        <h2>Password</h2>
+                        <label>
+                            {{form.password(class="txt_input")}}
+                        </label>
+                        <h2>Confirm Password</h2>
+                        <label>
+                            {{form.password2(class="txt_input")}}
+                        </label>
+
+                        <div class="rem_sub">
+                            <label>
+                                <br/>
+                                <div style="margin-right:100px">
+                                    {{form.submit(class="sub_button")}}
+                                </div>
+                            </label>
+                        </div>
+                </div>
+            </div><!--login_boder end-->
+            </form>
+    </div>
+{% endblock %}
+<!--login_m end-->
+{% block buttom_navbar%}
 {{super()}}
 {% endblock %}
-
-{% block register%}
-{{ wtf.quick_form(form) }}
-{% endblock %}
-
 </body>
 </html>
