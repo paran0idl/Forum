@@ -68,7 +68,6 @@ class User(UserMixin,db.Model):
         db.session.add(tmp)
         db.session.commit()
 
-
 class Post(db.Model):
     __tablename__='post'
     post_id=db.Column(db.Integer,primary_key=True,index=True,autoincrement=True)
