@@ -7,5 +7,13 @@
 {% block top_nav%}
 {{super()}}
 {% endblock %}
+
+{% block page_content%}
+{% if user.email_confirm==false %}
+<h1>not comfirm</h1>
+{% else %}
+<h1>confirm</h1>
+{% endif %}
+{% endblock %}
 </body>
 </html>

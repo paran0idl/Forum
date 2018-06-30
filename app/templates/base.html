@@ -60,18 +60,28 @@
                   <li><a href="#">Separated link</a></li>
                   <li><a href="#">One more separated link</a></li>
                 </ul>
+                {% if user %}
+                <li><a href="#">{{user.user_name}}</a></li>
+                {% if user.user_permission==4 %}
+                <li><a href={{url_for('main.admin')}}>admin</a></li>
+                {% endif %}
+                {% else %}
                 <li><a href={{url_for('auth.login')}}>登录</a></li>
                 <li><a href="{{url_for('auth.register')}}">注册</a></li>
-              </li>
-
+                {% endif %}
             </ul>
 
           </div><!--/.nav-collapse -->
         </div>
       </nav>
 {% endblock %}
+
 {% block login%}
 {% endblock %}
+
 {% block register %}
+{% endblock %}
+
+{% block page_content %}
 {% endblock %}
 </body>
