@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from flask import redirect,url_for
+from flask import redirect,url_for,request
 from flask import render_template
 from app import login_manager
 from flask_login import logout_user,current_user,login_required
 from . import main
 from app.models import User,Post,Follow
 from .forms import RegisterForm,WriteForm,CommentForm
-from datetime import datetime
+import datetime
 from .. import db
 
 @login_manager.user_loader
@@ -31,27 +31,12 @@ def logout():
 
 @main.route('/',methods = ['get','post'])
 def index():
-    #db.create_all()
     uid=''
     uname=''
     if not current_user.is_anonymous:
         uid = current_user.u_id
         uname = current_user.user_name
     return render_template('index.html',u_id=uid,user_name=uname)
-
-@main.route('/<u_id>',methods=['get','post'])
-@login_required
-def user_view(u_id):
-    user=User.query.filter_by(u_id=u_id).first()
-    followed=Follow.query.filter_by(followed_id=u_id).all()
-    posts=[]
-    for f in followed:
-        for post in Post.query.filter_by(publisher_id=f.followed_id).all():
-            posts.append(post)
-    for post in posts:
-        print post.title
-    return render_template('index.html',u_id=u_id,user_name=user.user_name,posts=posts)
-
     '''
         page = request.args.get('page',1)
         page = int(page)
@@ -280,6 +265,32 @@ def user_center():
     posts = Post.query.filter_by(Post.publisher_id==current_user.u_id).first()
     return render_template('user_center.html',name=name,followed=followed,followed_cnt=followed_cnt,fan=fan_cnt,posts=posts)
 
+'''
+@main.route('/user_info')
+@login_required
+def user_info():
+    form = UserInfo()
+    if form.validate_on_submit():
+        result = User.query.filter_by(User.user_name == current_user.user_name).first()
+        result.user_name=form.username.data
+        result.user_pwd=form.newpasswd.data
+        result.user_email=form.email.data
+        db.session.commit()
+        return render_template('index.html')
+    return render_template('user_info.html',form=form)
+'''
+
+
+@main.route('/user_center')
+@login_required
+def user_center():
+    name=current_user.user_name
+    followed = Follow.query.filter_by(Follow.follower_id == current_user.u_id).first()
+    followed_cnt = len(followed)
+    fan_cnt = len(Follow.query.filter_by(Follow.followed_id==current_user.u_id).first())
+    posts = Post.query.filter_by(Post.publisher_id==current_user.u_id).first()
+    return render_template('user_center.html',name=name,followed=followed,followed_cnt=followed_cnt,fan=fan_cnt,posts=posts)
+
 @main.route('/focus')
 @login_required
 def focus(followed):
@@ -328,4 +339,3 @@ def reply(toppost_id):
         db.session.add(post)
         db.session.commit()
     return render_template('reply.html',form=form)
-
