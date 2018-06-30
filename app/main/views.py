@@ -39,7 +39,6 @@ def index():
     return render_template('index.html',u_id=uid,user_name=uname)
 
 @main.route('/<u_id>',methods=['get','post'])
-@login_required
 def user_view(u_id):
     user=User.query.filter_by(u_id=u_id).first()
     following=Follow.query.filter_by(following_id=u_id).all()

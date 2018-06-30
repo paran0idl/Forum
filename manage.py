@@ -9,7 +9,6 @@ for model in models:
     admin.add_view(
     CustomModelView(model, db.session, category='Models'))
 
-
 if __name__=='__main__':
     app.run('127.0.0.1')
 
