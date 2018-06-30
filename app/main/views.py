@@ -37,6 +37,7 @@ def index():
     return render_template('index.html',u_id=uid,user_name=uname)
 
 @main.route('/<u_id>',methods=['get','post'])
+@login_required
 def user_view(u_id):
     user=User.query.filter_by(u_id=u_id).first()
     following=Follow.query.filter_by(following_id=u_id).all()
@@ -268,8 +269,12 @@ def error_404():
 @main.route('/user_center')
 @login_required
 def user_center():
-    name=request.args.get('section')
-    return render_template('user_center.html',name=name)
+    name=current_user.user_name
+    followed = Follow.query.filter_by(Follow.follower_id == current_user.u_id).first()
+    followed_cnt = len(followed)
+    fan_cnt = len(Follow.query.filter_by(Follow.followed_id==current_user.u_id).first())
+    posts = Post.query.filter_by(Post.publisher_id==current_user.u_id).first()
+    return render_template('user_center.html',name=name,followed=followed,followed_cnt=followed_cnt,fan=fan_cnt,posts=posts)
 
 '''
 @main.route('/user_info')
@@ -288,10 +293,9 @@ def user_info():
 
 @main.route('/focus')
 @login_required
-def focus():
+def focus(followed):
     posts = []
-    followings = Follow.query.filter_by(Follow.follower_id==current_user.u_id).first().following_id
-    for i in followings:
+    for i in followed:
         post = Post.query.filter_by(Post.publisher_id==i).first()
         posts.append(post)
     return render_template('focus.html',posts=posts)
