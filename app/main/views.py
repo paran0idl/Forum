@@ -5,7 +5,7 @@ from app import login_manager
 from flask_login import logout_user,current_user,login_required
 from . import main
 from app.models import User,Post,Follow
-from .forms import  RegisterForm,WriteForm
+from .forms import RegisterForm,WriteForm,CommentForm
 from datetime import datetime
 from .. import db
 
@@ -324,3 +324,21 @@ def writepost():
         db.session.add(post)
         db.session.commit()
     return render_template('WritePost.html',form=writeform)
+
+@main.route('/reply')
+@login_required
+def reply(toppost_id):
+    form=CommentForm()
+    if form.validate_on_submit():
+        post = Post('reply',
+                    form.text.data,
+                    current_user.u_id,
+                    datetime.now(),
+                    toppost_id,
+                    1,
+                    current_user.user_name
+                    )
+        db.session.add(post)
+        db.session.commit()
+    return render_template('reply.html',form=form)
+
