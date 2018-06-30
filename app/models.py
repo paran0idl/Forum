@@ -11,6 +11,14 @@ class Permission:
     FOLLOW = 0X01
     ADMIN = 0X04
 
+class Follow(db.Model):
+    __tablename__ = 'Follow'
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+                            primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+                            primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
 class User(UserMixin,db.Model):
     __tablename__='user'
     u_id = db.Column(db.Integer,primary_key=True,index=True,autoincrement=True)
@@ -21,10 +29,33 @@ class User(UserMixin,db.Model):
     avatar=db.Column(db.LargeBinary)
     email_confirm=db.Column(db.Boolean,default=0)
     user_score=db.Column(db.Integer,default=0)
-
     post=db.relationship('Post',backref='post_author', lazy='dynamic')
-    def __repr__(self):
-        return '<User: %s>' % (self.username)
+    followed = db.relationship('Follow',
+                               foreign_keys=[Follow.follower_id],
+                               backref=db.backref('follower', lazy='joined'),
+                               lazy='dynamic',
+                               cascade='all, delete-orphan')
+    followers = db.relationship('Follow',
+                                foreign_keys=[Follow.followed_id],
+                                backref=db.backref('followed', lazy='joined'),
+                                lazy='dynamic',
+                                cascade='all, delete-orphan')
+
+    def follow(self, user):
+        if not self.is_following(user):
+            f = Follow(follower=self, followed=user)
+            db.session.add(f)
+
+    def unfollow(self, user):
+        f = self.followed.filter_by(followed_id=user.u_id).first()
+        if f:
+            db.session.delete(f)
+
+    def is_following(self, user):
+        return self.followed.filter_by(followed_id=user.u_id).first() is not None
+
+    def is_followed_by(self, user):
+        return self.followers.filter_by(follower_id=user.u_id).first() is not None
 
     def get_id(self):
         try:
@@ -70,16 +101,9 @@ class Category(db.Model):
         self.category_id = category_id
         self.topic_id = topic_id
 
-class Follow(db.Model):
-    __tablename__='follow'
-    follow_info=db.Column(db.Integer,primary_key=True,index=True,autoincrement=True,unique=True)
-    following_id=db.Column(db.Integer)
-    follower_id=db.Column(db.Integer)
 
-    def __init__(self,follower_id,following_id,follow_info):
-        self.following_id = follower_id
-        self.follower_id = following_id
-        self.follow_info = follow_info
+
+
 
 class UpLoad:
     def allowed_file(self,filename):
