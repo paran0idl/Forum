@@ -299,7 +299,6 @@ def focus(followed):
 @login_required
 def writepost():
     writeform=WriteForm()
-    print datetime.now()
     if writeform.validate_on_submit():
         post = Post(writeform.name.data,
                     writeform.text.data,
@@ -313,11 +312,10 @@ def writepost():
         db.session.commit()
     return render_template('WritePost.html',form=writeform)
 
-@main.route('/reply')
+@main.route('/reply',methods=['get','post'])
 @login_required
 def reply(toppost_id):
     form=CommentForm()
-
     if form.validate_on_submit():
         post = Post('reply',
                     form.text.data,
