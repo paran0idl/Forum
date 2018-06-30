@@ -7,6 +7,7 @@ from . import main
 from app.models import User,Post,Follow
 from .forms import  RegisterForm,WriteForm
 from datetime import datetime
+from .. import db
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -312,12 +313,14 @@ def detail(post):
 def writepost():
     writeform=WriteForm()
     if writeform.validate_on_submit():
-        post = Post()
-        post.title=writeform.name.data
-        post.content=writeform.text.data
-        post.publisher_id=current_user.u_id
-        post.publisher_name=current_user.user_name
-        post.post_time=datetime.now()
-        post.toppost_id=0
-
-    return render_template('WritePost.html')
+        post = Post(writeform.name.data,
+                    writeform.text.data,
+                    current_user.u_id,
+                    datetime.now(),
+                    0,
+                    1,
+                    current_user.user_name
+                    )
+        db.session.add(post)
+        db.session.commit()
+    return render_template('WritePost.html',form=writeform)
