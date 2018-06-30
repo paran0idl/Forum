@@ -83,7 +83,7 @@ class Post(db.Model):
     publisher_name=db.Column(db.UnicodeText)
 
     def __init__(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
-        self.post_id = po_st_id
+        self.post_id = post_id
         self.title = title
         self.content = content
         self.publisher_id = publisher_id
