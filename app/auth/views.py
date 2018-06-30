@@ -50,7 +50,6 @@ def register():
 @auth.route('/confirm/<token>')
 @login_required
 def confirm(token):
-    print current_user.user_name
     if current_user.email_confirm == True:
         return redirect(url_for('main.index'))
     print confirm_token(token)
@@ -60,4 +59,14 @@ def confirm(token):
         flash('You have confirmed your account. Thanks!')
     else:
         flash('The confirmation link is invalid or has expired.')
+    return redirect(url_for('main.index'))
+
+@auth.route('/resend',methods=['get','post'])
+@login_required
+def resend_email():
+    user=current_user
+    print user.user_name
+    token = generate_confirmation_token(user.user_email)
+    send_email(user.user_email, 'Confirm Your Account',
+               'email/confirm', user=user, token=token)
     return redirect(url_for('main.index'))
