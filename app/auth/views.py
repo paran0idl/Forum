@@ -1,8 +1,8 @@
 from flask import render_template, redirect, request, url_for, flash,current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
-from ..models import User
-from .forms import LoginForm, RegistrationForm
+from ..models import User, Post
+from .forms import LoginForm, RegistrationForm, PostForm
 from .. import db
 from ..token import generate_confirmation_token,confirm_token
 from ..email import send_email
@@ -72,3 +72,19 @@ def resend_email():
     send_email(user.user_email, 'Confirm Your Account',
                'email/confirm', user=user, token=token)
     return redirect(url_for('main.index'))
+
+
+@auth.route('/sendPost/<top_id>',methods=['get','post'])
+@login_required
+def sendPost(top_id):
+    category = Category.query.all()
+    form = PostForm()
+    print current_user.u_id
+
+    if current_user.email_confirm and form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data, publisher_id=current_user.u_id,
+                    publisher_name=current_user.user_name, toppost_id=top_id,category_id=1)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('main.index'))
+    return render_template('auth/sendPost.html', form=form,user=current_user,category=category)

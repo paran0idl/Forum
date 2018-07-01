@@ -35,6 +35,7 @@ def admin():
 
 @main.route('/',methods = ['get','post'])
 def index():
+
     category=Category.query.all()
     uid=''
     uname=''
@@ -48,6 +49,7 @@ def index():
 
     return render_template('index.html',u_id=uid,user_name=uname,user=user,category=category,posts=posts)
 
+
 @main.route('/post/<toppost_id>',methods=['get','post'])
 def post(toppost_id):
     category = Category.query.all()
@@ -56,6 +58,7 @@ def post(toppost_id):
     posts.append(Post.query.filter_by(post_id=toppost_id).first())
     for p in Post.query.filter_by(toppost_id=toppost_id).all():
         posts.append(p)
+    posts = Post.query.order_by(Post.post_time.asc()).all()
     uid = ''
     uname = ''
     if not current_user.is_anonymous:

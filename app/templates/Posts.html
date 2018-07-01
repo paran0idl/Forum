@@ -80,13 +80,12 @@ ul{
 {% for post in posts %}
 <div id="father">
 		<div class="parts">
-			<div class="icon"><img src="logo.jpg" width="60px" height="60px" /></div>
+			<div class="icon"><img src="{{post.gravatar(post.publisher_name)}}" width="60px" height="60px" /></div>
 			<div class="info">
 				<div class="p">{{post.title}}</div>
                 <p>{{post.content}}</p>
 
 				<ul>
-                    <li >DNS</li>
 					<li>{{post.publisher_name}}</li>
 					<li>{{post.post_time}}</li>
 
@@ -95,6 +94,10 @@ ul{
 		</div>
 	</div>
 {% endfor%}
+{% if user.email_confirm %}
+<a href={{url_for('auth.sendPost',top_id=posts[0].post_id)}}><input type="button" class="button" value="回帖"/></a>
+{% else %}
+{% endif %}
 {% endblock %}
 </body>
 </html>

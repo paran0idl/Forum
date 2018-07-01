@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from ..models import User
+from flask_pagedown.fields import PageDownField
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
@@ -30,3 +31,9 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(user_name=field.data).first():
             raise ValidationError('Username already in use.')
+
+class PostForm(FlaskForm):
+    title = StringField("title", validators=[DataRequired()])
+    content = PageDownField("content", validators=[DataRequired()])
+    submit = SubmitField('Submit')
+

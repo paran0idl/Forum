@@ -6,9 +6,12 @@ from config import config
 from flask_mail import Mail
 from flask_admin import Admin
 from controllers.admin import CustomView
+from flask_pagedown import PageDown
+import hashlib
 bootstrap = Bootstrap()
 mail = Mail()
 admin = Admin()
+pagedown = PageDown()
 
 '''
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -32,6 +35,7 @@ def create_app(config_name):
     mail.init_app(app)
     admin.init_app(app)
     admin.add_view(CustomView(name='Custom'))
+    pagedown.init_app(app)
 
     db.init_app(app)
     login_manager.init_app(app)
@@ -43,6 +47,7 @@ def create_app(config_name):
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     return app
+
 '''
 if __name__ == '__main__':
     login_manager.init_app(app)

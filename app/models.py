@@ -4,6 +4,8 @@ from . import db
 import six
 from datetime import datetime
 import hashlib
+from markdown import markdown
+import bleach
 import os
 from werkzeug.utils import secure_filename
 import time
@@ -69,12 +71,10 @@ class User(UserMixin,db.Model):
         db.session.add(tmp)
         db.session.commit()
 
-    def gravatar_hash(self):
-        return hashlib.md5(self.user_email.lower().encode('utf-8')).hexdigest()
 
-    def gravatar(self, size=100, default='identicon', rating='g'):
+    def gravatar(self, bbb,size=100, default='identicon', rating='g'):
         url = 'https://secure.gravatar.com/avatar'
-        hash = self.gravatar_hash()
+        hash = hashlib.md5(bbb.encode('utf-8')).hexdigest()
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
             url=url, hash=hash, size=size, default=default, rating=rating)
 
@@ -92,19 +92,24 @@ class Post(db.Model):
     category_id=db.Column(db.Integer)
     post_score=db.Column(db.Integer,default=0)
 
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p']
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
+    def gravatar(self, bbb, size=100, default='identicon', rating='g'):
+        url = 'https://secure.gravatar.com/avatar'
+        hash = hashlib.md5(bbb.encode('utf-8')).hexdigest()
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+                url=url, hash=hash, size=size, default=default, rating=rating)
 
 
-    def __init__(self,post_id,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
-        self.post_id = post_id
+db.event.listen(Post.content, 'set', Post.on_changed_body)
 
-    def __init__(self,title,content,publisher_id,post_time,toppost_id,category_id,publisher_name):
-        self.title = title
-        self.content = content
-        self.publisher_id = publisher_id
-        self.post_time = post_time,
-        self.toppost_id = toppost_id,
-        self.category = category_id,
-        self.publisher_name=publisher_name
 
 class Category(db.Model):
     __tablename__='category'
